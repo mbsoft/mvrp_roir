@@ -16,8 +16,8 @@ class InputModifier {
           return this.addVehicles(modifiedInput, strategy, targetMinLoad);
         case 'time_window_relaxation':
           return this.relaxTimeWindows(modifiedInput, strategy);
-        case 'constraint_addition':
-          return this.addLoadConstraints(modifiedInput, strategy, targetMinLoad);
+        case 'time_window_softening':
+          return this.addTimeWindowSoftening(modifiedInput, strategy);
         default:
           throw new Error(`Unknown modification strategy: ${strategy.type}`);
       }
@@ -30,10 +30,10 @@ class InputModifier {
   static modifyObjective(input, strategy) {
     Logger.debug('Modifying optimization objective for load balancing');
     
-    // Change from minimizing vehicles to minimizing distance or maximizing load balance
-    if (strategy.objective === 'minimize_distance') {
+    // Change from minimizing vehicles to minimizing duration or maximizing load balance
+    if (strategy.objective === 'minimize_duration') {
       input.options.objective = {
-        travel_cost: 'distance'
+        travel_cost: 'duration'
       };
     } else if (strategy.objective === 'maximize_load_balance') {
       input.options.objective = {
@@ -50,10 +50,6 @@ class InputModifier {
           type: 'min',
           value: 'vehicles'
         }
-      };
-    } else if (strategy.objective === 'minimize_distance') {
-      input.options.objective = {
-        travel_cost: 'distance'
       };
     }
 
@@ -136,18 +132,23 @@ class InputModifier {
     return input;
   }
 
-  static addLoadConstraints(input, strategy, targetMinLoad) {
-    Logger.debug('Adding load constraints to optimization');
+  static addTimeWindowSoftening(input, strategy) {
+    Logger.debug('Adding time window softening constraints');
     
-    // Add custom constraints for minimum load per route
     if (!input.options.constraint) {
       input.options.constraint = {};
     }
 
-    input.options.constraint.min_load_per_route = targetMinLoad;
-    input.options.constraint.load_balance_weight = strategy.loadBalanceWeight || 0.5;
+    // Convert relaxation minutes to seconds for API constraints
+    const relaxationSeconds = (strategy.relaxationMinutes || 60) * 60;
+    
+    // Add vehicle overtime constraint (allows vehicles to work beyond their time window)
+    input.options.constraint.max_vehicle_overtime = relaxationSeconds;
+    
+    // Add visit lateness constraint (allows jobs to be completed after their time window)
+    input.options.constraint.max_visit_lateness = Math.min(relaxationSeconds, 1800); // Cap at 30 minutes for visit lateness
 
-    Logger.info(`Added load constraints: min_load_per_route=${targetMinLoad}`);
+    Logger.info(`Added time window softening: max_vehicle_overtime=${relaxationSeconds}s, max_visit_lateness=${Math.min(relaxationSeconds, 1800)}s`);
     return input;
   }
 
@@ -159,7 +160,7 @@ class InputModifier {
     // Strategy 1: Vary objective based on iteration and compliance rate
     if (analysis.summary.complianceRate < 30) {
       // Very low compliance - try different objectives
-      const objectives = ['maximize_load_balance', 'minimize_vehicles_with_load_constraint', 'minimize_distance'];
+      const objectives = ['maximize_load_balance', 'minimize_vehicles_with_load_constraint', 'minimize_duration'];
       const selectedObjective = objectives[iteration % objectives.length];
       strategies.push({
         type: 'objective_modification',
@@ -176,15 +177,14 @@ class InputModifier {
       });
     }
 
-    // Strategy 2: Vary load constraints based on iteration
-    const loadBalanceWeights = [0.7, 0.5, 0.8, 0.6, 0.9];
-    const selectedWeight = loadBalanceWeights[iteration % loadBalanceWeights.length];
+    // Strategy 2: Vary time window softening based on iteration
+    const relaxationMinutes = [30, 45, 60, 15, 90, 120];
+    const selectedRelaxation = relaxationMinutes[iteration % relaxationMinutes.length];
     strategies.push({
-      type: 'constraint_addition',
-      minLoadPerRoute: 12000,
-      loadBalanceWeight: selectedWeight,
+      type: 'time_window_softening',
+      relaxationMinutes: selectedRelaxation,
       priority: 'high',
-      description: `Add minimum load constraints with weight ${selectedWeight}`
+      description: `Add time window softening with ${selectedRelaxation} minutes relaxation`
     });
 
     // Strategy 3: Add vehicles with varying capacity and count
@@ -205,15 +205,7 @@ class InputModifier {
       });
     }
 
-    // Strategy 4: Vary time window relaxation
-    const relaxationMinutes = [30, 45, 60, 15, 90];
-    const selectedRelaxation = relaxationMinutes[iteration % relaxationMinutes.length];
-    strategies.push({
-      type: 'time_window_relaxation',
-      relaxationMinutes: selectedRelaxation,
-      priority: 'low',
-      description: `Relax time windows by ${selectedRelaxation} minutes (iteration ${iteration})`
-    });
+
 
 
 
@@ -228,13 +220,12 @@ class InputModifier {
     
     const strategies = [];
 
-    // Strategy 1: Reduce minimum load constraint
+    // Strategy 1: More aggressive time window softening
     strategies.push({
-      type: 'constraint_addition',
-      minLoadPerRoute: Math.max(6000, analysis.summary.targetMinLoad * 0.5), // Reduce by 50% but minimum 6000
-      loadBalanceWeight: 0.3, // Lower weight for load balancing
+      type: 'time_window_softening',
+      relaxationMinutes: 120, // 2 hours of relaxation
       priority: 'high',
-      description: 'Reduce minimum load constraints for better feasibility'
+      description: 'Add aggressive time window softening with 120 minutes relaxation'
     });
 
     // Strategy 2: Add more vehicles with lower capacity
