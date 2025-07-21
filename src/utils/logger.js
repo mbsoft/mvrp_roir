@@ -18,7 +18,7 @@ class Logger {
   }
 
   static debug(message) {
-    if (process.env.DEBUG) {
+    if (process.env.DEBUG === 'true') {
       console.log(chalk.gray(`[DEBUG] ${message}`));
     }
   }

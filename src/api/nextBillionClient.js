@@ -39,15 +39,7 @@ class NextBillionClient {
         }
       };
 
-      // Log the full request details for debugging
-      Logger.info('=== FULL REQUEST DETAILS ===');
-      Logger.info(`URL: ${this.baseUrl}/optimization/v2?key=${this.apiKey.substring(0, 8)}...`);
-      Logger.info(`Method: POST`);
-      Logger.info(`Headers: ${JSON.stringify({
-        'Content-Type': 'application/json'
-      }, null, 2)}`);
-      Logger.info(`Request Body: ${JSON.stringify(requestData, null, 2)}`);
-      Logger.info('=== END REQUEST DETAILS ===');
+
 
       const response = await this.client.post(`/optimization/v2?key=${this.apiKey}`, requestData);
       
@@ -75,10 +67,40 @@ class NextBillionClient {
       
       const response = await this.client.get(`/optimization/v2/result?id=${requestId}&key=${this.apiKey}`);
       
-      // The API returns the result directly, so if we get a response, it's completed
+      // Check if the response indicates the optimization is still processing
+      if (response.data.message && response.data.message.includes('Job still processing')) {
+        Logger.debug('Optimization still processing detected');
+        return {
+          success: true,
+          status: 'processing',
+          data: response.data
+        };
+      }
+      
+      // Check if the optimization has completed successfully
+      if (response.data.status === 'Ok' && response.data.result && response.data.result.routes) {
+        return {
+          success: true,
+          status: 'completed',
+          data: response.data
+        };
+      }
+      
+      // Check if there was an error
+      if (response.data.status === 'Error') {
+        return {
+          success: true,
+          status: 'failed',
+          data: response.data,
+          error: response.data.message || 'Optimization failed'
+        };
+      }
+      
+      // If we get here, the response is unexpected
+      Logger.debug(`Unexpected response format: ${JSON.stringify(response.data)}`);
       return {
         success: true,
-        status: response.data.status === 'Ok' ? 'completed' : 'failed',
+        status: 'unknown',
         data: response.data
       };
     } catch (error) {
@@ -91,9 +113,19 @@ class NextBillionClient {
     }
   }
 
-  async getOptimizationResult(requestId) {
+  async getOptimizationResult(requestId, existingData = null) {
     try {
       Logger.info(`Retrieving optimization result for request: ${requestId}`);
+      
+      // If we already have the data from a previous status check, use it
+      if (existingData) {
+        Logger.success('Optimization result retrieved successfully (from cached data)');
+        return {
+          success: true,
+          data: existingData,
+          solution: existingData.result || null
+        };
+      }
       
       const response = await this.client.get(`/optimization/v2/result?id=${requestId}&key=${this.apiKey}`);
       
@@ -121,7 +153,12 @@ class NextBillionClient {
       const startTime = Date.now();
       const checkInterval = 10000; // Check every 10 seconds
       
+      let pollCount = 0;
       while (Date.now() - startTime < maxWaitTime) {
+        pollCount++;
+        const elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        Logger.debug(`Polling attempt ${pollCount} (${elapsedSeconds}s elapsed)`);
+        
         const statusResponse = await this.getOptimizationStatus(requestId);
         
         if (!statusResponse.success) {
@@ -133,11 +170,17 @@ class NextBillionClient {
         
         if (status === 'completed') {
           Logger.success('Optimization completed successfully');
-          return await this.getOptimizationResult(requestId);
+          return await this.getOptimizationResult(requestId, statusResponse.data);
         } else if (status === 'failed') {
-          throw new Error('Optimization failed');
+          const errorMessage = statusResponse.error || 'Optimization failed';
+          throw new Error(errorMessage);
+        } else if (status === 'processing') {
+          Logger.debug('Optimization still processing, waiting...');
+          // Continue polling
         } else if (status === 'cancelled') {
           throw new Error('Optimization was cancelled');
+        } else {
+          Logger.warning(`Unknown optimization status: ${status}, continuing to poll...`);
         }
         
         // Wait before next check

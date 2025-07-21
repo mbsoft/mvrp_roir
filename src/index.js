@@ -22,7 +22,7 @@ class MVRPExplainability {
   constructor(options = {}) {
     this.options = {
       minLoad: 12000,
-      maxIterations: 10,
+      maxIterations: 20,
       useMock: false,
       outputDir: './output',
       ...options
@@ -35,6 +35,7 @@ class MVRPExplainability {
 
     this.iterationHistory = [];
     this.bestSolution = null;
+    this.totalAttempts = 0;
   }
 
   async run() {
@@ -158,14 +159,7 @@ class MVRPExplainability {
       const constraints = { minLoadPerRoute: this.options.minLoad };
       const constraintCheck = ConstraintChecker.checkSolutionConstraints(currentSolution, constraints);
 
-      // Store iteration data
-      this.iterationHistory.push({
-        iteration,
-        analysis,
-        constraintCheck,
-        solution: currentSolution,
-        timestamp: new Date().toISOString()
-      });
+
 
       // Check if we've achieved our goal
       if (constraintCheck.passed && analysis.routeCount > 0) {
@@ -208,6 +202,17 @@ class MVRPExplainability {
         successfulIteration = iteration;
         
         Logger.success(`Successful iteration ${iteration} with ${newAnalysis.summary.totalRoutes} routes`);
+        
+        // Add successful iteration to history
+        const newConstraintCheck = ConstraintChecker.checkSolutionConstraints(newSolution.data, { minLoadPerRoute: this.options.minLoad });
+        this.iterationHistory.push({
+          iteration,
+          analysis: newAnalysis,
+          constraintCheck: newConstraintCheck,
+          solution: newSolution.data,
+          timestamp: new Date().toISOString(),
+          relaxed: false
+        });
         
         // Update best solution if this one is better
         if (this.isBetterSolution(newSolution, this.bestSolution)) {
@@ -254,6 +259,17 @@ class MVRPExplainability {
               
               Logger.success(`Relaxed iteration ${iteration} successful with ${relaxedAnalysis.routeCount} routes`);
               
+              // Add successful relaxed iteration to history
+              const relaxedConstraintCheck = ConstraintChecker.checkSolutionConstraints(relaxedSolution.data, { minLoadPerRoute: this.options.minLoad });
+              this.iterationHistory.push({
+                iteration,
+                analysis: relaxedAnalysis,
+                constraintCheck: relaxedConstraintCheck,
+                solution: relaxedSolution.data,
+                timestamp: new Date().toISOString(),
+                relaxed: true
+              });
+              
               if (this.isBetterSolution(relaxedSolution, this.bestSolution)) {
                 this.bestSolution = currentSolution;
                 Logger.success(`New best solution found at iteration ${iteration} (relaxed)`);
@@ -272,6 +288,7 @@ class MVRPExplainability {
         }
       }
 
+      this.totalAttempts++;
       iteration++;
     }
 
@@ -359,6 +376,44 @@ class MVRPExplainability {
   async generateFinalReport(finalSolution, initialAnalysis) {
     Logger.info('Generating final report...');
 
+    // Handle case where no successful iterations occurred
+    if (!finalSolution || !finalSolution.routes) {
+      const report = {
+        summary: {
+          totalIterations: this.iterationHistory.length,
+          totalAttempts: this.totalAttempts || 0,
+          targetMinLoad: this.options.minLoad,
+          initialComplianceRate: initialAnalysis.summary.complianceRate,
+          finalComplianceRate: 0,
+          improvement: -initialAnalysis.summary.complianceRate,
+          constraintsMet: false,
+          bestSolutionFound: false
+        },
+        initialAnalysis: initialAnalysis.summary,
+        finalAnalysis: { complianceRate: 0, totalRoutes: 0, routesBelowCount: 0, totalLoadGap: 0 },
+        constraintCheck: { passed: false, violations: [] },
+        iterationHistory: this.iterationHistory.map(iter => ({
+          iteration: iter.iteration,
+          complianceRate: iter.analysis.summary.complianceRate,
+          totalRoutes: iter.analysis.summary.totalRoutes,
+          routesBelowTarget: iter.analysis.summary.routesBelowCount,
+          totalLoadGap: iter.analysis.summary.totalLoadGap,
+          constraintsPassed: iter.constraintCheck.passed,
+          relaxed: iter.relaxed || false
+        })),
+        recommendations: [{ description: "No successful optimization iterations found. Consider relaxing constraints or adjusting parameters." }]
+      };
+
+      // Save final report
+      const reportPath = path.join(this.options.outputDir, 'final_report.json');
+      await FileUtils.writeJsonFile(reportPath, report);
+
+      // Print summary
+      await this.printSummary(report);
+
+      return report;
+    }
+
     const finalAnalysis = LoadAnalyzer.analyzeLoadDistribution(finalSolution, this.options.minLoad);
     const constraints = { minLoadPerRoute: this.options.minLoad };
     const finalConstraintCheck = ConstraintChecker.checkSolutionConstraints(finalSolution, constraints);
@@ -366,6 +421,7 @@ class MVRPExplainability {
     const report = {
       summary: {
         totalIterations: this.iterationHistory.length,
+        totalAttempts: this.totalAttempts || 0,
         targetMinLoad: this.options.minLoad,
         initialComplianceRate: initialAnalysis.summary.complianceRate,
         finalComplianceRate: finalAnalysis.summary.complianceRate,
@@ -379,9 +435,11 @@ class MVRPExplainability {
       iterationHistory: this.iterationHistory.map(iter => ({
         iteration: iter.iteration,
         complianceRate: iter.analysis.summary.complianceRate,
+        totalRoutes: iter.analysis.summary.totalRoutes,
         routesBelowTarget: iter.analysis.summary.routesBelowCount,
         totalLoadGap: iter.analysis.summary.totalLoadGap,
-        constraintsPassed: iter.constraintCheck.passed
+        constraintsPassed: iter.constraintCheck.passed,
+        relaxed: iter.relaxed || false
       })),
       recommendations: ConstraintChecker.getConstraintViolationDetails(finalConstraintCheck).recommendations
     };
@@ -391,22 +449,26 @@ class MVRPExplainability {
     await FileUtils.writeJsonFile(reportPath, report);
 
     // Print summary
-    this.printSummary(report);
+    await this.printSummary(report);
 
     return report;
   }
 
-  printSummary(report) {
+  async printSummary(report) {
     console.log('\n' + chalk.bold.blue('='.repeat(60)));
     console.log(chalk.bold.blue('MVRP EXPLAINABILITY SUMMARY'));
     console.log(chalk.bold.blue('='.repeat(60)));
     
     console.log(`\n${chalk.bold('Target Minimum Load:')} ${report.summary.targetMinLoad}`);
-    console.log(`${chalk.bold('Total Iterations:')} ${report.summary.totalIterations}`);
+    console.log(`${chalk.bold('Successful Iterations:')} ${report.summary.totalIterations}`);
+    console.log(`${chalk.bold('Total Attempts:')} ${report.summary.totalAttempts}`);
     console.log(`${chalk.bold('Initial Compliance:')} ${report.summary.initialComplianceRate.toFixed(1)}%`);
     console.log(`${chalk.bold('Final Compliance:')} ${report.summary.finalComplianceRate.toFixed(1)}%`);
     console.log(`${chalk.bold('Improvement:')} ${report.summary.improvement.toFixed(1)}%`);
     console.log(`${chalk.bold('Constraints Met:')} ${report.summary.constraintsMet ? chalk.green('✓') : chalk.red('✗')}`);
+    
+    // Print iteration summary table
+    await this.printIterationTable(report.iterationHistory);
     
     if (report.recommendations.length > 0) {
       console.log(`\n${chalk.bold.yellow('Recommendations:')}`);
@@ -416,6 +478,253 @@ class MVRPExplainability {
     }
     
     console.log(chalk.bold.blue('\n' + '='.repeat(60)));
+  }
+
+  async printIterationTable(iterationHistory) {
+    if (!iterationHistory || iterationHistory.length === 0) {
+      console.log(`\n${chalk.yellow('No successful iterations to display')}`);
+      return;
+    }
+
+    console.log(`\n${chalk.bold.cyan('ITERATION SUMMARY TABLE')}`);
+
+    // Define column widths
+    const columnWidths = {
+      iter: 4,
+      compliance: 10,
+      routes: 6,
+      loadGap: 9,
+      objective: 20,
+      weight: 6,
+      vehicles: 12,
+      time: 12,
+      type: 8
+    };
+
+    // Calculate total width
+    const totalWidth = Object.values(columnWidths).reduce((sum, width) => sum + width, 0) + 
+                      (Object.keys(columnWidths).length - 1) * 3; // 3 chars for separators
+
+    console.log(chalk.cyan('='.repeat(totalWidth)));
+
+    // Table header
+    const header = [
+      this.padRight(chalk.bold.white('Iter'), columnWidths.iter),
+      this.padRight(chalk.bold.white('Compliance'), columnWidths.compliance),
+      this.padRight(chalk.bold.white('Routes'), columnWidths.routes),
+      this.padRight(chalk.bold.white('Load Gap'), columnWidths.loadGap),
+      this.padRight(chalk.bold.white('Objective'), columnWidths.objective),
+      this.padRight(chalk.bold.white('Weight'), columnWidths.weight),
+      this.padRight(chalk.bold.white('Vehicles'), columnWidths.vehicles),
+      this.padRight(chalk.bold.white('Time Window'), columnWidths.time),
+      this.padRight(chalk.bold.white('Type'), columnWidths.type)
+    ];
+
+    console.log(header.join(' | '));
+    console.log(chalk.cyan('-'.repeat(totalWidth)));
+
+    // Group iterations by iteration number to show both regular and relaxed attempts
+    const groupedIterations = {};
+    iterationHistory.forEach(iter => {
+      if (!groupedIterations[iter.iteration]) {
+        groupedIterations[iter.iteration] = [];
+      }
+      groupedIterations[iter.iteration].push(iter);
+    });
+
+    // Sort by iteration number
+    const sortedIterations = Object.keys(groupedIterations).sort((a, b) => parseInt(a) - parseInt(b));
+
+    for (const iterationNum of sortedIterations) {
+      const iterations = groupedIterations[iterationNum];
+      
+      for (const iter of iterations) {
+        const isRelaxed = iter.relaxed || false;
+        const status = isRelaxed ? chalk.yellow('Relaxed') : chalk.green('Regular');
+        
+        // Get strategy details from the iteration data
+        const strategyDetails = await this.getStrategyDetails(iter);
+        
+        const row = [
+          this.padRight(chalk.bold.white(iter.iteration), columnWidths.iter),
+          this.padRight(this.formatCompliance(iter.complianceRate), columnWidths.compliance),
+          this.padRight(chalk.white(`${iter.totalRoutes || 0}`), columnWidths.routes),
+          this.padRight(chalk.white(`${iter.totalLoadGap || 0}`), columnWidths.loadGap),
+          this.padRight(chalk.cyan(strategyDetails.objective || 'N/A'), columnWidths.objective),
+          this.padRight(chalk.cyan(strategyDetails.loadWeight || 'N/A'), columnWidths.weight),
+          this.padRight(chalk.cyan(strategyDetails.vehicles || 'N/A'), columnWidths.vehicles),
+          this.padRight(chalk.cyan(strategyDetails.timeRelax || 'N/A'), columnWidths.time),
+          this.padRight(status, columnWidths.type)
+        ];
+
+        console.log(row.join(' | '));
+      }
+    }
+
+    console.log(chalk.cyan('='.repeat(totalWidth)));
+    
+    // Print strategy change summary
+    await this.printStrategyChangeSummary(sortedIterations, groupedIterations);
+  }
+
+  padRight(str, width) {
+    const plainText = str.replace(/\u001b\[[0-9;]*m/g, ''); // Remove ANSI color codes
+    const padding = ' '.repeat(Math.max(0, width - plainText.length));
+    return str + padding;
+  }
+
+  async printStrategyChangeSummary(sortedIterations, groupedIterations) {
+    console.log(`\n${chalk.bold.yellow('STRATEGY CHANGE SUMMARY')}`);
+    console.log(chalk.yellow('-'.repeat(60)));
+    
+    let prevObjective = null;
+    let prevWeight = null;
+    let prevVehicles = null;
+    let prevTime = null;
+    
+    for (const iterationNum of sortedIterations) {
+      const iterations = groupedIterations[iterationNum];
+      if (iterations.length > 0) {
+        const firstIter = iterations[0];
+        const strategyDetails = await this.getStrategyDetailsSync({ iteration: firstIter.iteration });
+        
+
+        
+        const changes = [];
+        if (strategyDetails.objective !== prevObjective && strategyDetails.objective !== 'N/A') {
+          changes.push(`Objective: ${prevObjective || 'None'} → ${strategyDetails.objective}`);
+          prevObjective = strategyDetails.objective;
+        }
+        if (strategyDetails.loadWeight !== prevWeight && strategyDetails.loadWeight !== 'N/A') {
+          changes.push(`Weight: ${prevWeight || 'None'} → ${strategyDetails.loadWeight}`);
+          prevWeight = strategyDetails.loadWeight;
+        }
+        if (strategyDetails.vehicles !== prevVehicles && strategyDetails.vehicles !== 'N/A') {
+          changes.push(`Vehicles: ${prevVehicles || 'None'} → ${strategyDetails.vehicles}`);
+          prevVehicles = strategyDetails.vehicles;
+        }
+        if (strategyDetails.timeRelax !== prevTime && strategyDetails.timeRelax !== 'N/A') {
+          changes.push(`Time: ${prevTime || 'None'} → ${strategyDetails.timeRelax}`);
+          prevTime = strategyDetails.timeRelax;
+        }
+        
+        if (changes.length > 0) {
+          console.log(chalk.cyan(`Iteration ${iterationNum}:`));
+          changes.forEach(change => {
+            console.log(chalk.white(`  • ${change}`));
+          });
+        }
+      }
+    }
+  }
+
+  async getStrategyDetailsSync(iteration) {
+    // Asynchronous version for the summary
+    try {
+      const strategyPath = path.join(this.options.outputDir, `iteration_${iteration.iteration}`, 'strategies.json');
+      const fs = await import('fs/promises');
+      const exists = await fs.access(strategyPath).then(() => true).catch(() => false);
+      
+      if (exists) {
+        const strategies = JSON.parse(await fs.readFile(strategyPath, 'utf8'));
+        return this.extractStrategyDetails(strategies);
+      }
+    } catch (error) {
+      // If we can't read the file, return default values
+    }
+
+    return {
+      objective: 'N/A',
+      loadWeight: 'N/A',
+      vehicles: 'N/A',
+      timeRelax: 'N/A'
+    };
+  }
+
+  async getStrategyDetails(iteration) {
+    // Try to get strategy details from saved files
+    try {
+      const strategyPath = path.join(this.options.outputDir, `iteration_${iteration.iteration}`, 'strategies.json');
+      const inputPath = path.join(this.options.outputDir, `iteration_${iteration.iteration}`, 'input.json');
+      const fs = await import('fs/promises');
+      
+      const strategyExists = await fs.access(strategyPath).then(() => true).catch(() => false);
+      const inputExists = await fs.access(inputPath).then(() => true).catch(() => false);
+      
+      let details = {
+        objective: 'N/A',
+        loadWeight: 'N/A',
+        vehicles: 'N/A',
+        timeRelax: 'N/A'
+      };
+      
+      if (strategyExists) {
+        const strategies = JSON.parse(await fs.readFile(strategyPath, 'utf8'));
+        details = this.extractStrategyDetails(strategies);
+      }
+      
+      // Extract actual time window values from input file
+      if (inputExists) {
+        const inputData = JSON.parse(await fs.readFile(inputPath, 'utf8'));
+        if (inputData.options && inputData.options.constraint) {
+          const constraints = inputData.options.constraint;
+          if (constraints.max_vehicle_overtime || constraints.max_visit_lateness) {
+            const overtime = constraints.max_vehicle_overtime ? Math.round(constraints.max_vehicle_overtime / 60) : 0;
+            const lateness = constraints.max_visit_lateness ? Math.round(constraints.max_visit_lateness / 60) : 0;
+            details.timeRelax = `${overtime}m/${lateness}m`;
+          }
+        }
+      }
+      
+      return details;
+    } catch (error) {
+      // If we can't read the file, return default values
+    }
+
+    return {
+      objective: 'N/A',
+      loadWeight: 'N/A',
+      vehicles: 'N/A',
+      timeRelax: 'N/A'
+    };
+  }
+
+  extractStrategyDetails(strategies) {
+    const details = {
+      objective: 'N/A',
+      loadWeight: 'N/A',
+      vehicles: 'N/A',
+      timeRelax: 'N/A'
+    };
+
+    strategies.forEach(strategy => {
+      switch (strategy.type) {
+        case 'objective_modification':
+          details.objective = strategy.objective || 'N/A';
+          break;
+        case 'constraint_addition':
+          details.loadWeight = strategy.loadBalanceWeight || 'N/A';
+          break;
+        case 'vehicle_addition':
+          details.vehicles = `${strategy.count || 0}@${strategy.capacity || 0}`;
+          break;
+        case 'time_window_softening':
+          details.timeRelax = `${strategy.relaxationMinutes || 0}m`;
+          break;
+      }
+    });
+
+    return details;
+  }
+
+  formatCompliance(complianceRate) {
+    if (complianceRate >= 80) {
+      return chalk.green(`${complianceRate.toFixed(1)}%`);
+    } else if (complianceRate >= 60) {
+      return chalk.yellow(`${complianceRate.toFixed(1)}%`);
+    } else {
+      return chalk.red(`${complianceRate.toFixed(1)}%`);
+    }
   }
 }
 
