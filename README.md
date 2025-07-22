@@ -216,6 +216,34 @@ Iter | Compliance | Routes | Load Gap  | Objective            | Vehicles     | T
 - **Time Window**: Time window softening constraints (overtime/lateness in minutes)
 - **Type**: Strategy type (Regular or Relaxed)
 
+**Strategy Types Explained:**
+
+**🟢 Regular Strategy (Green)**
+- **When Used**: During normal iterative optimization when the previous iteration produced a valid solution with routes
+- **Characteristics**: 
+  - Standard constraints with moderate time window softening (15-60 minutes)
+  - Conservative approach with incremental changes
+  - Reasonable vehicle additions (3-15 vehicles)
+  - Standard optimization objectives (minimize_duration, maximize_load_balance)
+
+**🟡 Relaxed Strategy (Yellow)**
+- **When Used**: When a regular iteration fails to produce any routes (empty routes array), indicating optimization failure
+- **Characteristics**:
+  - Aggressive constraints to ensure a solution is found
+  - Recovery mechanism for failed optimizations
+  - More aggressive time window softening (120+ minutes)
+  - More vehicles with lower capacity (up to 15 vehicles with 10,000 capacity)
+  - Simpler objectives (minimize_vehicles_with_load_constraint)
+  - Additional time window relaxation (60 minutes extra)
+
+**🔄 Recovery Process:**
+1. Normal flow uses regular strategies each iteration
+2. If an iteration produces no routes, it's marked as failed
+3. Tool reverts to the last successful iteration and applies relaxed strategies
+4. Uses more aggressive parameters to ensure a solution is found
+5. If relaxed strategy works, continues with regular strategies
+6. If relaxed strategy also fails, the process stops
+
 **Key Insights from Example:**
 - **Iteration 1**: Started with load balancing objective but resulted in too many routes (42)
 - **Iteration 2**: Switched to duration minimization with 15 additional vehicles, achieved 100% compliance
