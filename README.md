@@ -190,20 +190,20 @@ The tool will generate:
 The tool provides a comprehensive iteration summary table showing the evolution of optimization strategies and their impact:
 
 ```
-===============================================================================================================
-Iter | Compliance | Routes | Load Gap  | Objective            | Weight | Vehicles     | Time Window  | Type    
----------------------------------------------------------------------------------------------------------------
-1    | 0.0%       | 42     | 504000    | maximize_load_balance | N/A    | 4@12000      | 45m/30m      | Regular 
-2    | 100.0%     | 6      | 0         | minimize_duration    | N/A    | 15@16000     | 60m/30m      | Regular 
-3    | 57.1%      | 7      | 21094     | N/A                  | N/A    | N/A          | 15m/15m      | Regular 
-4    | 100.0%     | 5      | 0         | N/A                  | N/A    | 3@18000      | 90m/30m      | Regular 
-5    | 100.0%     | 5      | 0         | N/A                  | N/A    | N/A          | 120m/30m     | Regular 
-6    | 57.1%      | 7      | 12895     | N/A                  | N/A    | N/A          | 30m/30m      | Regular 
-7    | 83.3%      | 6      | 4480      | N/A                  | N/A    | 3@16000      | 45m/30m      | Regular 
-8    | 83.3%      | 6      | 9014      | N/A                  | N/A    | N/A          | 60m/30m      | Regular 
-9    | 57.1%      | 7      | 21127     | N/A                  | N/A    | N/A          | 15m/15m      | Regular 
-10   | 100.0%     | 5      | 0         | N/A                  | N/A    | 3@14000      | 90m/30m      | Regular 
-===============================================================================================================
+======================================================================================================
+Iter | Compliance | Routes | Load Gap  | Objective            | Vehicles     | Time Window  | Type    
+------------------------------------------------------------------------------------------------------
+1    | 0.0%       | 42     | 504000    | maximize_load_balance | 4@12000      | 45m/30m      | Regular 
+2    | 100.0%     | 6      | 0         | minimize_duration    | 15@16000     | 60m/30m      | Regular 
+3    | 57.1%      | 7      | 21094     | N/A                  | N/A          | 15m/15m      | Regular 
+4    | 100.0%     | 5      | 0         | N/A                  | 3@18000      | 90m/30m      | Regular 
+5    | 100.0%     | 5      | 0         | N/A                  | N/A          | 120m/30m     | Regular 
+6    | 57.1%      | 7      | 12895     | N/A                  | N/A          | 30m/30m      | Regular 
+7    | 83.3%      | 6      | 4480      | N/A                  | 3@16000      | 45m/30m      | Regular 
+8    | 83.3%      | 6      | 9014      | N/A                  | N/A          | 60m/30m      | Regular 
+9    | 57.1%      | 7      | 21127     | N/A                  | N/A          | 15m/15m      | Regular 
+10   | 100.0%     | 5      | 0         | N/A                  | 3@14000      | 90m/30m      | Regular 
+======================================================================================================
 ```
 
 **Table Columns Explained:**
@@ -212,7 +212,6 @@ Iter | Compliance | Routes | Load Gap  | Objective            | Weight | Vehicle
 - **Routes**: Number of routes in the solution
 - **Load Gap**: Total load gap across all routes below target
 - **Objective**: Optimization objective (e.g., minimize_duration, maximize_load_balance)
-- **Weight**: Load balancing weight (if applicable)
 - **Vehicles**: Number and capacity of vehicles added (e.g., "4@12000" = 4 vehicles with 12,000 capacity)
 - **Time Window**: Time window softening constraints (overtime/lateness in minutes)
 - **Type**: Strategy type (Regular or Relaxed)
