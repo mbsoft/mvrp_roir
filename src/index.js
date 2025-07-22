@@ -495,7 +495,6 @@ class MVRPExplainability {
       routes: 6,
       loadGap: 9,
       objective: 20,
-      weight: 6,
       vehicles: 12,
       time: 12,
       type: 8
@@ -514,7 +513,6 @@ class MVRPExplainability {
       this.padRight(chalk.bold.white('Routes'), columnWidths.routes),
       this.padRight(chalk.bold.white('Load Gap'), columnWidths.loadGap),
       this.padRight(chalk.bold.white('Objective'), columnWidths.objective),
-      this.padRight(chalk.bold.white('Weight'), columnWidths.weight),
       this.padRight(chalk.bold.white('Vehicles'), columnWidths.vehicles),
       this.padRight(chalk.bold.white('Time Window'), columnWidths.time),
       this.padRight(chalk.bold.white('Type'), columnWidths.type)
@@ -551,7 +549,6 @@ class MVRPExplainability {
           this.padRight(chalk.white(`${iter.totalRoutes || 0}`), columnWidths.routes),
           this.padRight(chalk.white(`${iter.totalLoadGap || 0}`), columnWidths.loadGap),
           this.padRight(chalk.cyan(strategyDetails.objective || 'N/A'), columnWidths.objective),
-          this.padRight(chalk.cyan(strategyDetails.loadWeight || 'N/A'), columnWidths.weight),
           this.padRight(chalk.cyan(strategyDetails.vehicles || 'N/A'), columnWidths.vehicles),
           this.padRight(chalk.cyan(strategyDetails.timeRelax || 'N/A'), columnWidths.time),
           this.padRight(status, columnWidths.type)
@@ -619,7 +616,7 @@ class MVRPExplainability {
   }
 
   async getStrategyDetailsSync(iteration) {
-    // Asynchronous version for the summary
+    // Try to get strategy details from saved files
     try {
       const strategyPath = path.join(this.options.outputDir, `iteration_${iteration.iteration}`, 'strategies.json');
       const fs = await import('fs/promises');
@@ -635,7 +632,6 @@ class MVRPExplainability {
 
     return {
       objective: 'N/A',
-      loadWeight: 'N/A',
       vehicles: 'N/A',
       timeRelax: 'N/A'
     };
@@ -653,7 +649,6 @@ class MVRPExplainability {
       
       let details = {
         objective: 'N/A',
-        loadWeight: 'N/A',
         vehicles: 'N/A',
         timeRelax: 'N/A'
       };
@@ -683,7 +678,6 @@ class MVRPExplainability {
 
     return {
       objective: 'N/A',
-      loadWeight: 'N/A',
       vehicles: 'N/A',
       timeRelax: 'N/A'
     };
@@ -692,7 +686,6 @@ class MVRPExplainability {
   extractStrategyDetails(strategies) {
     const details = {
       objective: 'N/A',
-      loadWeight: 'N/A',
       vehicles: 'N/A',
       timeRelax: 'N/A'
     };
@@ -701,9 +694,6 @@ class MVRPExplainability {
       switch (strategy.type) {
         case 'objective_modification':
           details.objective = strategy.objective || 'N/A';
-          break;
-        case 'constraint_addition':
-          details.loadWeight = strategy.loadBalanceWeight || 'N/A';
           break;
         case 'vehicle_addition':
           details.vehicles = `${strategy.count || 0}@${strategy.capacity || 0}`;

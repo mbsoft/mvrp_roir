@@ -183,4 +183,71 @@ The tool will generate:
 - Modified input files for each iteration with detailed change documentation
 - Solution files for each optimization run with comprehensive analysis
 - Comparison reports showing progress with detailed reasoning
-- Final optimized solution meeting the new constraints with explainable insights 
+- Final optimized solution meeting the new constraints with explainable insights
+
+### Example Output
+
+The tool provides a comprehensive iteration summary table showing the evolution of optimization strategies and their impact:
+
+```
+======================================================================================================
+Iter | Compliance | Routes | Load Gap  | Objective            | Vehicles     | Time Window  | Type    
+------------------------------------------------------------------------------------------------------
+1    | 0.0%       | 42     | 504000    | maximize_load_balance | 4@12000      | 45m/30m      | Regular 
+2    | 100.0%     | 6      | 0         | minimize_duration    | 15@16000     | 60m/30m      | Regular 
+3    | 57.1%      | 7      | 21094     | N/A                  | N/A          | 15m/15m      | Regular 
+4    | 100.0%     | 5      | 0         | N/A                  | 3@18000      | 90m/30m      | Regular 
+5    | 100.0%     | 5      | 0         | N/A                  | N/A          | 120m/30m     | Regular 
+6    | 57.1%      | 7      | 12895     | N/A                  | N/A          | 30m/30m      | Regular 
+7    | 83.3%      | 6      | 4480      | N/A                  | 3@16000      | 45m/30m      | Regular 
+8    | 83.3%      | 6      | 9014      | N/A                  | N/A          | 60m/30m      | Regular 
+9    | 57.1%      | 7      | 21127     | N/A                  | N/A          | 15m/15m      | Regular 
+10   | 100.0%     | 5      | 0         | N/A                  | 3@14000      | 90m/30m      | Regular 
+======================================================================================================
+```
+
+**Table Columns Explained:**
+- **Iter**: Iteration number
+- **Compliance**: Percentage of routes meeting the minimum load requirement
+- **Routes**: Number of routes in the solution
+- **Load Gap**: Total load gap across all routes below target
+- **Objective**: Optimization objective (e.g., minimize_duration, maximize_load_balance)
+- **Vehicles**: Number and capacity of vehicles added (e.g., "4@12000" = 4 vehicles with 12,000 capacity)
+- **Time Window**: Time window softening constraints (overtime/lateness in minutes)
+- **Type**: Strategy type (Regular or Relaxed)
+
+**Strategy Types Explained:**
+
+**🟢 Regular Strategy (Green)**
+- **When Used**: During normal iterative optimization when the previous iteration produced a valid solution with routes
+- **Characteristics**: 
+  - Standard constraints with moderate time window softening (15-60 minutes)
+  - Conservative approach with incremental changes
+  - Reasonable vehicle additions (3-15 vehicles)
+  - Standard optimization objectives (minimize_duration, maximize_load_balance)
+
+**🟡 Relaxed Strategy (Yellow)**
+- **When Used**: When a regular iteration fails to produce any routes (empty routes array), indicating optimization failure
+- **Characteristics**:
+  - Aggressive constraints to ensure a solution is found
+  - Recovery mechanism for failed optimizations
+  - More aggressive time window softening (120+ minutes)
+  - More vehicles with lower capacity (up to 15 vehicles with 10,000 capacity)
+  - Simpler objectives (minimize_vehicles_with_load_constraint)
+  - Additional time window relaxation (60 minutes extra)
+
+**🔄 Recovery Process:**
+1. Normal flow uses regular strategies each iteration
+2. If an iteration produces no routes, it's marked as failed
+3. Tool reverts to the last successful iteration and applies relaxed strategies
+4. Uses more aggressive parameters to ensure a solution is found
+5. If relaxed strategy works, continues with regular strategies
+6. If relaxed strategy also fails, the process stops
+
+**Key Insights from Example:**
+- **Iteration 1**: Started with load balancing objective but resulted in too many routes (42)
+- **Iteration 2**: Switched to duration minimization with 15 additional vehicles, achieved 100% compliance
+- **Iteration 4**: Reduced to 5 routes while maintaining 100% compliance
+- **Final Result**: 100% compliance with 5 routes, meeting all constraints
+
+The tool also provides a detailed strategy change summary showing how parameters evolved across iterations to achieve the target constraints. 
