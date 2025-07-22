@@ -1,6 +1,6 @@
-# MVRP Explainability - NextBillion.ai Route Optimization Explainability Tool
+# Route Optimization Iterative Refiner (ROIR)
 
-A Node.js application for explainable NextBillion.ai route optimization solutions by analyzing and modifying input parameters to achieve new constraints and objectives with detailed reasoning.
+A Node.js application for iterative route optimization refinement using NextBillion.ai API. ROIR analyzes existing route solutions and iteratively refines them by modifying input parameters to achieve new constraints and objectives with detailed reasoning and explainable insights.
 
 ## Overview
 
@@ -161,11 +161,14 @@ src/
 # Install dependencies
 npm install
 
-# Run the explainability process
+# Run ROIR
 npm start
 
 # Run with custom parameters
 npm start -- --min-load 12000 --max-iterations 10
+
+# Or use the CLI directly
+npx roir --min-load 12000 --max-iterations 10
 ```
 
 ## Configuration
