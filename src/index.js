@@ -18,7 +18,7 @@ import NextBillionClient from './api/nextBillionClient.js';
 // Load environment variables
 dotenv.config();
 
-class MVRPExplainability {
+class ROIR {
   constructor(options = {}) {
     this.options = {
       minLoad: 12000,
@@ -722,8 +722,8 @@ class MVRPExplainability {
 const program = new Command();
 
 program
-  .name('mvrp-explainability')
-  .description('Explainable route optimization for NextBillion.ai solutions')
+  .name('roir')
+  .description('Route Optimization Iterative Refiner (ROIR) - Iterative route optimization for NextBillion.ai solutions')
   .version('1.0.0');
 
 program
@@ -739,16 +739,16 @@ const options = program.opts();
 // Main execution
 async function main() {
   try {
-    const mvrpExplainability = new MVRPExplainability({
+    const roir = new ROIR({
       minLoad: parseInt(options.minLoad),
       maxIterations: parseInt(options.maxIterations),
       useMock: options.useMock,
       outputDir: options.outputDir
     });
 
-    await mvrpExplainability.run();
+    await roir.run();
     
-    Logger.success('MVRP Explainability process completed successfully');
+    Logger.success('ROIR process completed successfully');
     process.exit(0);
   } catch (error) {
     Logger.error(`Process failed: ${error.message}`);
@@ -761,4 +761,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 
-export default MVRPExplainability; 
+export default ROIR; 

@@ -1,5 +1,5 @@
 {
-  "name": "mvrp_explainability",
+  "name": "roir",
   "version": "1.0.0",
   "main": "src/index.js",
   "type": "module",
@@ -8,10 +8,10 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch src/index.js"
   },
-  "keywords": ["route-optimization", "nextbillion", "mvrp", "explainability"],
+  "keywords": ["route-optimization", "nextbillion", "roir", "iterative-refinement", "load-balancing"],
   "author": "",
   "license": "ISC",
-  "description": "Explainable route optimization tool for NextBillion.ai solutions",
+  "description": "Route Optimization Iterative Refiner (ROIR) - Iterative route optimization tool for NextBillion.ai solutions",
   "dependencies": {
     "axios": "^1.6.0",
     "fs-extra": "^11.1.1",
