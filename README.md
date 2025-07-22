@@ -183,4 +183,44 @@ The tool will generate:
 - Modified input files for each iteration with detailed change documentation
 - Solution files for each optimization run with comprehensive analysis
 - Comparison reports showing progress with detailed reasoning
-- Final optimized solution meeting the new constraints with explainable insights 
+- Final optimized solution meeting the new constraints with explainable insights
+
+### Example Output
+
+The tool provides a comprehensive iteration summary table showing the evolution of optimization strategies and their impact:
+
+```
+===============================================================================================================
+Iter | Compliance | Routes | Load Gap  | Objective            | Weight | Vehicles     | Time Window  | Type    
+---------------------------------------------------------------------------------------------------------------
+1    | 0.0%       | 42     | 504000    | maximize_load_balance | N/A    | 4@12000      | 45m/30m      | Regular 
+2    | 100.0%     | 6      | 0         | minimize_duration    | N/A    | 15@16000     | 60m/30m      | Regular 
+3    | 57.1%      | 7      | 21094     | N/A                  | N/A    | N/A          | 15m/15m      | Regular 
+4    | 100.0%     | 5      | 0         | N/A                  | N/A    | 3@18000      | 90m/30m      | Regular 
+5    | 100.0%     | 5      | 0         | N/A                  | N/A    | N/A          | 120m/30m     | Regular 
+6    | 57.1%      | 7      | 12895     | N/A                  | N/A    | N/A          | 30m/30m      | Regular 
+7    | 83.3%      | 6      | 4480      | N/A                  | N/A    | 3@16000      | 45m/30m      | Regular 
+8    | 83.3%      | 6      | 9014      | N/A                  | N/A    | N/A          | 60m/30m      | Regular 
+9    | 57.1%      | 7      | 21127     | N/A                  | N/A    | N/A          | 15m/15m      | Regular 
+10   | 100.0%     | 5      | 0         | N/A                  | N/A    | 3@14000      | 90m/30m      | Regular 
+===============================================================================================================
+```
+
+**Table Columns Explained:**
+- **Iter**: Iteration number
+- **Compliance**: Percentage of routes meeting the minimum load requirement
+- **Routes**: Number of routes in the solution
+- **Load Gap**: Total load gap across all routes below target
+- **Objective**: Optimization objective (e.g., minimize_duration, maximize_load_balance)
+- **Weight**: Load balancing weight (if applicable)
+- **Vehicles**: Number and capacity of vehicles added (e.g., "4@12000" = 4 vehicles with 12,000 capacity)
+- **Time Window**: Time window softening constraints (overtime/lateness in minutes)
+- **Type**: Strategy type (Regular or Relaxed)
+
+**Key Insights from Example:**
+- **Iteration 1**: Started with load balancing objective but resulted in too many routes (42)
+- **Iteration 2**: Switched to duration minimization with 15 additional vehicles, achieved 100% compliance
+- **Iteration 4**: Reduced to 5 routes while maintaining 100% compliance
+- **Final Result**: 100% compliance with 5 routes, meeting all constraints
+
+The tool also provides a detailed strategy change summary showing how parameters evolved across iterations to achieve the target constraints. 
