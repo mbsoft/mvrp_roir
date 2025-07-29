@@ -17,6 +17,7 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
   const [fileSummary, setFileSummary] = useState<FileSummary | null>(null)
   const [solutionSummary, setSolutionSummary] = useState<SolutionSummary | null>(null)
   const [currentFileContent, setCurrentFileContent] = useState<string | null>(null)
+  const [hasSuggestedLoadTarget, setHasSuggestedLoadTarget] = useState(false)
 
   const parseFileSummary = (content: string): FileSummary | null => {
     try {
@@ -135,6 +136,9 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
   const analyzeDeliveryValuesAndSuggestLoadTarget = (deliveryValues: number[]) => {
     if (deliveryValues.length === 0) return
 
+    // Only suggest once per file upload
+    if (hasSuggestedLoadTarget) return
+
     const maxDelivery = Math.max(...deliveryValues)
     const minDelivery = Math.min(...deliveryValues)
     const avgDelivery = deliveryValues.reduce((sum, val) => sum + val, 0) / deliveryValues.length
@@ -175,6 +179,7 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
     // Call the callback to notify parent component
     if (onLoadTargetSuggestion) {
       onLoadTargetSuggestion(suggestedMin, suggestedMax, suggestedTarget)
+      setHasSuggestedLoadTarget(true) // Mark that we've suggested for this file
     }
 
     console.log('Load Target Analysis:', {
@@ -203,6 +208,7 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
       reader.onload = (e) => {
         const content = e.target?.result as string
         setCurrentFileContent(content)
+        setHasSuggestedLoadTarget(false) // Reset flag for new file
         const fileData = {
           name: file.name,
           content,
@@ -246,6 +252,7 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
     setFileSummary(null)
     setSolutionSummary(null)
     setCurrentFileContent(null)
+    setHasSuggestedLoadTarget(false) // Reset flag when file is removed
   }
 
   return (

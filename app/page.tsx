@@ -26,6 +26,8 @@ export default function Home() {
   const [loadTargetRange, setLoadTargetRange] = useState<{ min: number; max: number } | undefined>()
 
   const handleLoadTargetSuggestion = (min: number, max: number, suggested: number) => {
+    console.log('Load target suggestion called:', { min, max, suggested, currentValue: optimizationParams.loadTargets })
+    
     setOptimizationParams(prev => ({
       ...prev,
       loadTargets: suggested

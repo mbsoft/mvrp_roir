@@ -11,10 +11,26 @@ interface InputModifiersProps {
 
 export default function InputModifiers({ params, onParamsChange, loadTargetRange }: InputModifiersProps) {
   const handleChange = (key: keyof OptimizationParams, value: number) => {
-    onParamsChange({
-      ...params,
-      [key]: value,
-    })
+    // Special handling for loadTargets to clamp to range if provided
+    if (key === 'loadTargets' && loadTargetRange) {
+      console.log('Load target change:', { 
+        newValue: value, 
+        currentValue: params.loadTargets, 
+        range: loadTargetRange,
+        needsClamping: value < loadTargetRange.min || value > loadTargetRange.max
+      })
+      
+      const clampedValue = Math.max(loadTargetRange.min, Math.min(loadTargetRange.max, value))
+      onParamsChange({
+        ...params,
+        [key]: clampedValue,
+      })
+    } else {
+      onParamsChange({
+        ...params,
+        [key]: value,
+      })
+    }
   }
 
   return (
@@ -112,7 +128,7 @@ export default function InputModifiers({ params, onParamsChange, loadTargetRange
               min={loadTargetRange?.min || 5000}
               max={loadTargetRange?.max || 20000}
               step={loadTargetRange ? Math.max(50, Math.floor((loadTargetRange.max - loadTargetRange.min) / 50)) : 1000}
-              value={Math.max(loadTargetRange?.min || 5000, Math.min(loadTargetRange?.max || 20000, params.loadTargets))}
+              value={params.loadTargets}
               onChange={(e) => handleChange('loadTargets', parseInt(e.target.value))}
               className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               aria-label="Load Targets slider"

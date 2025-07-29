@@ -3229,7 +3229,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 2,
@@ -3250,7 +3250,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 3,
@@ -3271,7 +3271,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 4,
@@ -3292,7 +3292,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 5,
@@ -3313,7 +3313,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 6,
@@ -3334,7 +3334,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 7,
@@ -3355,7 +3355,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 8,
@@ -3376,7 +3376,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 9,
@@ -3397,7 +3397,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		},
 		{
 			"id": 10,
@@ -3418,7 +3418,7 @@
 				"fixed": 3600
 			},
 			"end_index": 0,
-			"max_tasks": 12
+			"max_tasks": 30
 		}
 	],
 	"options": {
