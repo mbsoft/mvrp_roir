@@ -1,0 +1,120 @@
+{
+  "summary": {
+    "totalAttempts": 1,
+    "startIndex": 195,
+    "endIndex": 200,
+    "successfulRequest": false,
+    "removedJobCount": 5
+  },
+  "removedJobs": [
+    {
+      "job": {
+        "id": "72000137584-1-97",
+        "description": "HOST INTERNATIONAL@MCCARRAN | 5757 WAYNE NEWTON BLVD | LAS VEGAS | CALL SHANE FOR GATE PICK UP ES CORT 7022909956 | 0 | 79 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          79
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 128
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:37:17.979Z",
+      "range": "195-200"
+    },
+    {
+      "job": {
+        "id": "72000164663-2-62",
+        "description": "THE CENTURION @ LAS #27085 | 5757 WAYNE NEWTON BLVD TERM 1 | LAS VEGAS | MAIN GATE @ MCCARRAN/ CALL 702-490-8431 | 40 | 65 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          65
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 158
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:37:17.979Z",
+      "range": "195-200"
+    },
+    {
+      "job": {
+        "id": "72000002015-3-42",
+        "description": "GTMS-THE CLUB@LAS D GATE | 5757 WAYNE NEWTON BLVD | LAS VEGAS | CALL KATIE 7025691284 DOCK50 | 18 | 12 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          12
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 128
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:37:17.979Z",
+      "range": "195-200"
+    },
+    {
+      "job": {
+        "id": "72000004575-1-5",
+        "description": "DURANGO STATION | 6915 S DURANGO | LAS VEGAS | DOCK ON WEST SIDE. ENTER ON MAULE, 3RD RIGHT WEST OF DURANGO. PICK UP EMPTY KEGS. | 0 | 1,494 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          1,
+          494
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 159
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:37:17.979Z",
+      "range": "195-200"
+    },
+    {
+      "job": {
+        "id": "72000132562-1-22",
+        "description": "LEE'S LIQUOR #9 MESQUITE | 670 W PIONEER BLVD | MESQUITE | DOCK REAR OF BUILDING | 0 | 1,631 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          1,
+          631
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 137
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:37:17.979Z",
+      "range": "195-200"
+    }
+  ],
+  "successfulJobs": [],
+  "successfulRequest": null,
+  "recommendations": [
+    {
+      "type": "error",
+      "description": "Range 195-200 causes errors"
+    },
+    {
+      "type": "info",
+      "description": "Identified 5 jobs in this range that cause capacity errors"
+    }
+  ]
+}
