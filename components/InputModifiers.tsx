@@ -6,9 +6,10 @@ import { OptimizationParams } from '@/types'
 interface InputModifiersProps {
   params: OptimizationParams
   onParamsChange: (params: OptimizationParams) => void
+  loadTargetRange?: { min: number; max: number }
 }
 
-export default function InputModifiers({ params, onParamsChange }: InputModifiersProps) {
+export default function InputModifiers({ params, onParamsChange, loadTargetRange }: InputModifiersProps) {
   const handleChange = (key: keyof OptimizationParams, value: number) => {
     onParamsChange({
       ...params,
@@ -99,14 +100,19 @@ export default function InputModifiers({ params, onParamsChange }: InputModifier
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Load Targets (units)
+            {loadTargetRange && (
+              <span className="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                Auto-adjusted
+              </span>
+            )}
           </label>
           <div className="flex items-center space-x-4">
             <input
               type="range"
-              min="5000"
-              max="20000"
-              step="1000"
-              value={params.loadTargets}
+              min={loadTargetRange?.min || 5000}
+              max={loadTargetRange?.max || 20000}
+              step={loadTargetRange ? Math.max(50, Math.floor((loadTargetRange.max - loadTargetRange.min) / 50)) : 1000}
+              value={Math.max(loadTargetRange?.min || 5000, Math.min(loadTargetRange?.max || 20000, params.loadTargets))}
               onChange={(e) => handleChange('loadTargets', parseInt(e.target.value))}
               className="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
               aria-label="Load Targets slider"
@@ -116,7 +122,10 @@ export default function InputModifiers({ params, onParamsChange }: InputModifier
             </span>
           </div>
           <p className="text-xs text-gray-500 mt-1">
-            Minimum load target for each route
+            {loadTargetRange 
+              ? `Auto-adjusted range based on solution analysis. Range: ${loadTargetRange.min.toLocaleString()} - ${loadTargetRange.max.toLocaleString()} units`
+              : 'Minimum load target for each route'
+            }
           </p>
         </div>
       </div>
@@ -128,6 +137,11 @@ export default function InputModifiers({ params, onParamsChange }: InputModifier
           <div>Shift Adjustments: {params.shiftTimeAdjustments}m</div>
           <div>Iterations: {params.numberOfIterations}</div>
           <div>Load Target: {params.loadTargets.toLocaleString()} units</div>
+          {loadTargetRange && (
+            <div className="col-span-2 text-blue-600">
+              Load Range: {loadTargetRange.min.toLocaleString()} - {loadTargetRange.max.toLocaleString()} units
+            </div>
+          )}
         </div>
       </div>
     </div>
