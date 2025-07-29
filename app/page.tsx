@@ -24,6 +24,16 @@ export default function Home() {
   const [finalRequestId, setFinalRequestId] = useState('')
   const [apiKey, setApiKey] = useState('')
 
+  const handleLoadTargetSuggestion = (min: number, max: number, suggested: number) => {
+    setOptimizationParams(prev => ({
+      ...prev,
+      loadTargets: suggested
+    }))
+    
+    // Show a notification or update status to inform user
+    setExecutionStatus(`Auto-adjusted load target to ${suggested} based on solution analysis`)
+  }
+
   const handleExecute = async () => {
     if (!inputFile || !solutionFile || !apiKey) return
 
@@ -140,6 +150,7 @@ export default function Home() {
                 onFileUpload={setSolutionFile}
                 acceptedFileType=".json"
                 loadTarget={optimizationParams.loadTargets}
+                onLoadTargetSuggestion={handleLoadTargetSuggestion}
               />
               <ExecutionPanel
                 isExecuting={isExecuting}

@@ -10,9 +10,10 @@ interface FileUploadProps {
   onFileUpload: (file: FileData | null) => void
   acceptedFileType: string
   loadTarget?: number
+  onLoadTargetSuggestion?: (min: number, max: number, suggested: number) => void
 }
 
-export default function FileUpload({ title, onFileUpload, acceptedFileType, loadTarget }: FileUploadProps) {
+export default function FileUpload({ title, onFileUpload, acceptedFileType, loadTarget, onLoadTargetSuggestion }: FileUploadProps) {
   const [fileSummary, setFileSummary] = useState<FileSummary | null>(null)
   const [solutionSummary, setSolutionSummary] = useState<SolutionSummary | null>(null)
   const [currentFileContent, setCurrentFileContent] = useState<string | null>(null)
@@ -74,12 +75,20 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
       const routeDetails: any[] = []
       let routesBelowLoadTarget = 0
       
+      // Collect delivery values for load target analysis
+      const deliveryValues: number[] = []
+      
       if (routes > 0 && result.routes) {
         result.routes.forEach((route: any, index: number) => {
           const distance = route.distance || 0
           const duration = route.duration || 0
           const stops = route.steps?.length || 0
           const load = route.load || 0
+          
+          // Extract delivery value from route
+          if (route.delivery && Array.isArray(route.delivery) && route.delivery[0]) {
+            deliveryValues.push(route.delivery[0])
+          }
           
           // Count routes below load target if loadTarget is provided
           if (loadTarget && load < loadTarget) {
@@ -94,6 +103,11 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
             load
           })
         })
+      }
+      
+      // Analyze delivery values and suggest load target range
+      if (deliveryValues.length > 0) {
+        analyzeDeliveryValuesAndSuggestLoadTarget(deliveryValues)
       }
       
       const averageRouteDistance = routes > 0 ? totalDistance / routes : 0
@@ -115,6 +129,58 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
       console.error('Error parsing solution summary:', error)
       return null
     }
+  }
+
+  // Function to analyze delivery values and suggest load target range
+  const analyzeDeliveryValuesAndSuggestLoadTarget = (deliveryValues: number[]) => {
+    if (deliveryValues.length === 0) return
+
+    const maxDelivery = Math.max(...deliveryValues)
+    const minDelivery = Math.min(...deliveryValues)
+    const avgDelivery = deliveryValues.reduce((sum, val) => sum + val, 0) / deliveryValues.length
+    const medianDelivery = deliveryValues.sort((a, b) => a - b)[Math.floor(deliveryValues.length / 2)]
+
+    let suggestedMin: number
+    let suggestedMax: number
+    let suggestedTarget: number
+
+    // Analyze the range and suggest appropriate load target settings
+    if (maxDelivery < 1000) {
+      // Small delivery values (mostly < 1000)
+      suggestedMin = 100
+      suggestedMax = 1000
+      suggestedTarget = Math.min(Math.max(avgDelivery * 0.8, 200), 800)
+    } else if (maxDelivery < 5000) {
+      // Medium delivery values (1000-5000)
+      suggestedMin = 1000
+      suggestedMax = 5000
+      suggestedTarget = Math.min(Math.max(avgDelivery * 0.8, 1500), 4000)
+    } else if (maxDelivery < 15000) {
+      // Large delivery values (5000-15000)
+      suggestedMin = 5000
+      suggestedMax = 15000
+      suggestedTarget = Math.min(Math.max(avgDelivery * 0.8, 8000), 12000)
+    } else {
+      // Very large delivery values (> 15000)
+      suggestedMin = 10000
+      suggestedMax = 20000
+      suggestedTarget = Math.min(Math.max(avgDelivery * 0.8, 15000), 18000)
+    }
+
+    // Round to nearest 100 for cleaner values
+    suggestedMin = Math.round(suggestedMin / 100) * 100
+    suggestedMax = Math.round(suggestedMax / 100) * 100
+    suggestedTarget = Math.round(suggestedTarget / 100) * 100
+
+    // Call the callback to notify parent component
+    if (onLoadTargetSuggestion) {
+      onLoadTargetSuggestion(suggestedMin, suggestedMax, suggestedTarget)
+    }
+
+    console.log('Load Target Analysis:', {
+      deliveryValues: { min: minDelivery, max: maxDelivery, avg: avgDelivery, median: medianDelivery },
+      suggestedRange: { min: suggestedMin, max: suggestedMax, target: suggestedTarget }
+    })
   }
 
   // Helper function to format duration from seconds to HH:MM
