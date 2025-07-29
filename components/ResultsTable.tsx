@@ -12,11 +12,12 @@ interface ResultsTableProps {
 export default function ResultsTable({ results, finalRequestId }: ResultsTableProps) {
   const handleExportResults = () => {
     const csvContent = [
-      ['Iteration', 'Compliance (%)', 'Routes', 'Load Gap', 'Objective', 'Time Window Easing (m)', 'Shift Time Adjustments (m)', 'Request ID', 'Timestamp'],
+      ['Iteration', 'Compliance (%)', 'Routes', 'Unassigned', 'Load Gap', 'Objective', 'Time Window Easing (m)', 'Shift Time Adjustments (m)', 'Request ID', 'Timestamp'],
       ...results.map(result => [
         result.iteration.toString(),
         result.compliance.toString(),
         result.routes.toString(),
+        result.unassigned.toString(),
         result.loadGap.toString(),
         result.objective,
         result.timeWindowEasing.toString(),
@@ -68,6 +69,9 @@ export default function ResultsTable({ results, finalRequestId }: ResultsTablePr
                 Routes
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Unassigned
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Load Gap
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -100,6 +104,17 @@ export default function ResultsTable({ results, finalRequestId }: ResultsTablePr
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {result.routes}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                    result.unassigned === 0 
+                      ? 'bg-green-100 text-green-800' 
+                      : result.unassigned <= 5 
+                      ? 'bg-yellow-100 text-yellow-800' 
+                      : 'bg-red-100 text-red-800'
+                  }`}>
+                    {result.unassigned}
+                  </span>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {result.loadGap.toLocaleString()}
