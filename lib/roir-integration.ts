@@ -325,7 +325,8 @@ export class ROIRIntegration {
         routes: totalRoutes,
         loadGap: Math.round(loadGap),
         objective: this.getObjectiveString(refinedParams.objective),
-        timeWindow: `${refinedParams.timeWindowEasing}m/${refinedParams.shiftTimeAdjustments}m`,
+        timeWindowEasing: refinedParams.timeWindowEasing,
+        shiftTimeAdjustments: refinedParams.shiftTimeAdjustments,
         type: 'Success',
         requestId: actualRequestId,
         timestamp: new Date().toISOString(),
@@ -365,7 +366,7 @@ export class ROIRIntegration {
           }
         }
         refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing, 30)
-        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments, 15)
+        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments, 30)
         break
         
       case 2:
@@ -373,8 +374,8 @@ export class ROIRIntegration {
         refinedParams.objective = {
           travel_cost: 'duration' as const
         }
-        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing + 15, 60)
-        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments + 10, 30)
+        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing, 60)
+        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments, 60)
         break
         
       case 3:
@@ -386,8 +387,8 @@ export class ROIRIntegration {
             value: 'tasks' as const
           }
         }
-        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing + 30, 90)
-        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments + 15, 45)
+        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing, 90)
+        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments, 90)
         break
         
       case 4:
@@ -399,8 +400,8 @@ export class ROIRIntegration {
             value: 'vehicles' as const
           }
         }
-        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing + 45, 120)
-        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments + 20, 60)
+        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing, 120)
+        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments, 120)
         break
         
       default:
@@ -412,12 +413,12 @@ export class ROIRIntegration {
               custom: { type: 'min-max' as const, value: 'tasks' as const }
             },
             timeEasing: 30,
-            shiftAdjust: 15
+            shiftAdjust: 30
           },
           {
             objective: { travel_cost: 'duration' as const },
             timeEasing: 60,
-            shiftAdjust: 30
+            shiftAdjust: 60
           },
           {
             objective: {
@@ -425,7 +426,7 @@ export class ROIRIntegration {
               custom: { type: 'min' as const, value: 'vehicles' as const }
             },
             timeEasing: 90,
-            shiftAdjust: 45
+            shiftAdjust: 90
           },
           {
             objective: {
@@ -433,15 +434,15 @@ export class ROIRIntegration {
               custom: { type: 'min-max' as const, value: 'tasks' as const }
             },
             timeEasing: 120,
-            shiftAdjust: 60
+            shiftAdjust: 120
           }
         ]
         
         const strategyIndex = (iteration - 1) % strategies.length
         const strategy = strategies[strategyIndex]
         refinedParams.objective = strategy.objective
-        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing + strategy.timeEasing, 120)
-        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments + strategy.shiftAdjust, 60)
+        refinedParams.timeWindowEasing = Math.min(params.timeWindowEasing, strategy.timeEasing)
+        refinedParams.shiftTimeAdjustments = Math.min(params.shiftTimeAdjustments, strategy.shiftAdjust)
         break
     }
     

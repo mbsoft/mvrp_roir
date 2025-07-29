@@ -120,41 +120,48 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left Column - File Uploads */}
-          <div className="space-y-6">
-            <FileUpload
-              title="Input File (input.json)"
-              onFileUpload={setInputFile}
-              acceptedFileType=".json"
-            />
-            <FileUpload
-              title="Solution File (solution.json)"
-              onFileUpload={setSolutionFile}
-              acceptedFileType=".json"
-              loadTarget={optimizationParams.loadTargets}
-            />
+        <div className="space-y-6">
+          {/* API Configuration Panel */}
+          <div className="w-full">
             <ApiKeyInput onApiKeyChange={setApiKey} />
           </div>
 
-          {/* Middle Column - Input Modifiers and Execution */}
-          <div className="space-y-6">
-            <InputModifiers
-              params={optimizationParams}
-              onParamsChange={setOptimizationParams}
-            />
-            <ExecutionPanel
-              isExecuting={isExecuting}
-              executionStatus={executionStatus}
-              onExecute={handleExecute}
-              canExecute={!!(inputFile && solutionFile && apiKey)}
-              currentIteration={currentIteration}
-              totalIterations={optimizationParams.numberOfIterations}
-            />
+          {/* Top Row - File Uploads and Input Modifiers */}
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+            {/* Left Column - File Uploads and Execution */}
+            <div className="lg:col-span-2 space-y-6">
+              <FileUpload
+                title="Input File (input.json)"
+                onFileUpload={setInputFile}
+                acceptedFileType=".json"
+              />
+              <FileUpload
+                title="Solution File (solution.json)"
+                onFileUpload={setSolutionFile}
+                acceptedFileType=".json"
+                loadTarget={optimizationParams.loadTargets}
+              />
+              <ExecutionPanel
+                isExecuting={isExecuting}
+                executionStatus={executionStatus}
+                onExecute={handleExecute}
+                canExecute={!!(inputFile && solutionFile && apiKey)}
+                currentIteration={currentIteration}
+                totalIterations={optimizationParams.numberOfIterations}
+              />
+            </div>
+
+            {/* Right Column - Input Modifiers */}
+            <div className="lg:col-span-2 space-y-6">
+              <InputModifiers
+                params={optimizationParams}
+                onParamsChange={setOptimizationParams}
+              />
+            </div>
           </div>
 
-          {/* Right Column - Results (spans 2 columns) */}
-          <div className="lg:col-span-2">
+          {/* Bottom Row - Results Table (full width) */}
+          <div className="w-full">
             <ResultsTable results={results} finalRequestId={finalRequestId} />
           </div>
         </div>

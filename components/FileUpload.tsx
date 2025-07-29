@@ -184,7 +184,14 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
 
   return (
     <div className="card">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">{title}</h3>
+      <div className="flex items-center space-x-2 mb-4">
+        {title.includes('Input') ? (
+          <FileText className="h-5 w-5 text-gray-600" />
+        ) : (
+          <Route className="h-5 w-5 text-gray-600" />
+        )}
+        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+      </div>
       
       <div
         {...getRootProps()}
@@ -301,8 +308,7 @@ export default function FileUpload({ title, onFileUpload, acceptedFileType, load
               <div className="text-sm mt-1">
                 <span className="font-medium text-orange-800">Routes Below Target:</span>
                 <span className="ml-2 text-orange-700">
-                  {solutionSummary.routesBelowLoadTarget} of {solutionSummary.routes} routes 
-                  ({solutionSummary.routes > 0 ? Math.round((solutionSummary.routesBelowLoadTarget / solutionSummary.routes) * 100) : 0}%)
+                  {solutionSummary.routes > 0 ? Math.round((solutionSummary.routesBelowLoadTarget / solutionSummary.routes) * 100) : 0}%
                 </span>
               </div>
               
