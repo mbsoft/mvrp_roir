@@ -56,6 +56,7 @@ class NextBillionClient {
       return {
         success: false,
         error: error.message,
+        originalError: error,
         data: null
       };
     }
@@ -202,7 +203,12 @@ class NextBillionClient {
       const submitResponse = await this.submitOptimization(inputData, options);
       
       if (!submitResponse.success) {
-        throw new Error(`Failed to submit optimization: ${submitResponse.error}`);
+        // Preserve the original error details
+        const error = new Error(`Failed to submit optimization: ${submitResponse.error}`);
+        if (submitResponse.originalError) {
+          error.originalError = submitResponse.originalError;
+        }
+        throw error;
       }
       
       const requestId = submitResponse.requestId;

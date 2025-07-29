@@ -1,256 +1,246 @@
-# Route Optimization Iterative Refiner (ROIR)
+# Route Optimization Iterative Refiner (ROIR) - Next.js Application
 
-A Node.js application for iterative route optimization refinement using NextBillion.ai API. ROIR analyzes existing route solutions and iteratively refines them by modifying input parameters to achieve new constraints and objectives with detailed reasoning and explainable insights.
+A modern Next.js web application for iteratively refining route optimization using NextBillion.ai's API. Users can upload input and solution files, adjust optimization parameters, and run iterative optimization processes with real-time results.
 
-## Overview
+## Features
 
-This tool takes existing NextBillion.ai `input.json` and `solution.json` files and provides explainable insights into route optimization by analyzing and modifying input parameters to achieve new goals. The current target is to ensure each route has a minimum load of 12,000 units with detailed reasoning for each modification.
+- **File Upload**: Drag & drop or copy/paste `input.json` and `solution.json` files
+- **File Analysis**: Automatic analysis and summary of uploaded files
+- **Parameter Adjustment**: Interactive sliders for optimization parameters
+- **API Key Management**: Secure storage and management of NextBillion.ai API keys
+- **Real-time Optimization**: Execute iterative optimization with live progress tracking
+- **Results Display**: Comprehensive results table with export functionality
+- **Production API Integration**: Real NextBillion.ai API calls with error handling and retry logic
 
-## Problem Analysis
+## Getting Started
 
-### Current State
-- **70 vehicles** with 14,000 capacity each
-- **171 jobs** with delivery quantities ranging from 955 to 4,467 units
-- **7 time windows** across different days
-- **Objective**: Minimize number of vehicles used
-- **Current constraint**: Need minimum 12,000 load per route
+### Prerequisites
 
-### Key Observations
-- Vehicle capacity (14,000) is sufficient for 12,000 minimum load requirement
-- Jobs have multiple time window options for flexibility
-- Current objective prioritizes vehicle minimization over load balancing
-- Need to modify optimization approach to prioritize load distribution
+- Node.js 16.20.2 or higher
+- npm or yarn
+- NextBillion.ai API key
 
-## Approach
+### Installation
 
-### 1. Core Strategy
-- **Explainable Optimization**: Provide detailed reasoning for each optimization decision
-- **Constraint-Driven**: Modify input to prioritize load balancing over vehicle minimization
-- **Solution Tracking**: Compare and evaluate solutions across iterations with explanations
-- **Convergence Monitoring**: Track progress toward target constraints with detailed analysis
-
-### 2. Key Components
-
-#### A. Input/Solution Parser
-- Parse and validate NextBillion.ai JSON formats with detailed validation
-- Extract current route assignments, loads, and constraints with explanations
-- Calculate current performance metrics with comprehensive analysis
-
-#### B. Constraint Analyzer
-- Analyze current route loads vs. target minimum (12,000) with detailed reasoning
-- Identify routes that need load redistribution with explanations
-- Determine which routes can accept additional stops with capacity analysis
-
-#### C. Input Modifier
-- Adjust vehicle capacities, time windows, or service times with reasoning
-- Modify depot assignments or route constraints with explanations
-- Add/remove vehicles or adjust fleet composition with detailed analysis
-- Implement load balancing strategies with comprehensive documentation
-
-#### D. Optimization Runner
-- Interface with NextBillion.ai API with detailed logging
-- Submit modified input files with change documentation
-- Retrieve and parse new solutions with comprehensive analysis
-- Handle API rate limits and errors with detailed reporting
-
-#### E. Solution Evaluator
-- Compare solutions across iterations with detailed analysis
-- Track convergence toward target constraints with explanations
-- Evaluate trade-offs between load balancing and other objectives with comprehensive reasoning
-
-### 3. Module Structure
-
-```
-src/
-├── parsers/
-│   ├── inputParser.js      # Parse NextBillion input.json
-│   └── solutionParser.js   # Parse NextBillion solution.json
-├── analyzers/
-│   ├── loadAnalyzer.js     # Analyze route loads and constraints
-│   └── constraintChecker.js # Check if solutions meet new goals
-├── modifiers/
-│   ├── inputModifier.js    # Modify input parameters
-│   └── loadBalancer.js     # Implement load balancing strategies
-├── api/
-│   ├── nextBillionClient.js # NextBillion.ai API integration
-│   └── rateLimiter.js      # Handle API rate limits
-├── evaluators/
-│   ├── solutionEvaluator.js # Compare and rank solutions
-│   └── metricsCalculator.js # Calculate performance metrics
-├── utils/
-│   ├── fileUtils.js        # File I/O operations
-│   └── logger.js           # Logging and debugging
-└── index.js                # Main orchestration logic
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd mvrp_explainability
 ```
 
-### 4. Load Balancing Strategies
+2. Install dependencies:
+```bash
+npm install
+```
 
-#### Strategy 1: Objective Modification
-- Change objective from "minimize vehicles" to "minimize distance" or "maximize load balance"
-- Add custom constraints for minimum route loads
+3. Configure environment variables:
+```bash
+cp env.example .env.local
+```
 
-#### Strategy 2: Capacity Adjustment
-- Increase vehicle capacities for routes that need more load
-- Add vehicles with specific capacity targets
+Edit `.env.local` with your configuration:
+```env
+NEXTBILLION_API_URL=https://api.nextbillion.io
+NEXTBILLION_RATE_LIMIT_MS=1000
+NEXTBILLION_MAX_RETRIES=3
+NEXTBILLION_RETRY_DELAY_MS=1000
+# NEXTBILLION_API_KEY=your_default_api_key_here
+```
 
-#### Strategy 3: Route Merging
-- Combine low-load routes where feasible
-- Redistribute stops between routes
+4. Start the development server:
+```bash
+npm run dev
+```
 
-#### Strategy 4: Time Window Optimization
-- Adjust time windows to allow more stops per route
-- Relax time constraints for better load distribution
-
-#### Strategy 5: Fleet Composition
-- Add specialized vehicles for load balancing
-- Modify vehicle types or capacities
-
-### 5. Explainability Process
-
-#### Phase 1: Analysis
-1. Parse current solution and identify routes below 12,000 load with detailed reasoning
-2. Calculate load distribution statistics with comprehensive analysis
-3. Identify potential redistribution opportunities with explanations
-
-#### Phase 2: Modification
-1. Implement load balancing algorithms with detailed reasoning
-2. Adjust vehicle capacities or add vehicles with comprehensive analysis
-3. Modify time windows or service constraints with explanations
-4. Re-run optimization with modified parameters and detailed logging
-
-#### Phase 3: Evaluation
-1. Compare new solution against targets with detailed analysis
-2. Track improvement metrics with comprehensive reporting
-3. Decide whether to continue iterating with detailed reasoning
-
-#### Phase 4: Convergence
-1. Implement stopping criteria with detailed reasoning
-2. Save best solutions with comprehensive documentation
-3. Generate comparison reports with detailed analysis
-
-### 6. Dependencies
-
-#### Core Dependencies
-- `axios` - HTTP client for API calls
-- `fs-extra` - Enhanced file system operations
-- `lodash` - Utility functions for data manipulation
-
-#### Optional Dependencies
-- `commander` - CLI argument parsing
-- `chalk` - Colored console output
-- `ora` - Terminal spinners for long operations
-- `dotenv` - Environment variable management
-
-### 7. Risk Mitigation
-
-- **API Rate Limits**: Implement exponential backoff and request queuing
-- **Solution Quality**: Maintain original optimization objectives while meeting new constraints
-- **Convergence**: Set maximum iteration limits to prevent infinite loops
-- **Data Integrity**: Validate all input/output files at each step
-
-### 8. Expected Outcomes
-
-- Routes with minimum 12,000 load each
-- Maintained or improved overall optimization metrics
-- Systematic approach for future constraint modifications with detailed reasoning
-- Reusable framework for different optimization goals with comprehensive analysis
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Usage
 
-```bash
-# Install dependencies
-npm install
+### 1. API Configuration
+- Enter your NextBillion.ai API key in the API Configuration panel
+- The API key is stored securely in your browser's local storage
+- Click "Save API Key" to persist the key for future sessions
 
-# Run ROIR
-npm start
+### 2. File Upload
+- Upload your `input.json` file (contains vehicles, jobs, and constraints)
+- Upload your `solution.json` file (contains current route solution)
+- The application automatically analyzes and displays file summaries
 
-# Run with custom parameters
-npm start -- --min-load 12000 --max-iterations 10
+### 3. Parameter Adjustment
+- **Time Window Easing**: Adjust time window flexibility (0-60 minutes)
+- **Shift Time Adjustments**: Modify shift time constraints (0-30 minutes)
+- **Number of Iterations**: Set optimization iteration count (1-20)
+- **Load Targets**: Define vehicle load targets (kg)
 
-# Or use the CLI directly
-npx roir --min-load 12000 --max-iterations 10
+### 4. Optimization Execution
+- Click "Run ROIR" to start the optimization process
+- Monitor progress through the execution panel
+- View real-time results in the results table
+
+### 5. Results Analysis
+- Review optimization results for each iteration
+- Copy the final request ID for tracking
+- Export results for further analysis
+
+## API Integration
+
+### Production API Calls
+
+The application makes real API calls to NextBillion.ai's route optimization service:
+
+- **Optimization Endpoint**: `POST /optimization/v2?key={api_key}`
+- **Result Endpoint**: `GET /optimization/v2/result?id={request_id}&key={api_key}`
+- **Rate Limiting**: Configurable minimum interval between calls
+- **Retry Logic**: Exponential backoff with configurable retry attempts
+- **Error Handling**: Comprehensive error handling and logging
+- **Fallback Mode**: Mock mode when API is unavailable or invalid key
+
+### Request Payload Structure
+
+```json
+{
+  "vehicles": [...],
+  "jobs": [...],
+  "options": {
+    "time_window_easing": 30,
+    "shift_time_adjustments": 15,
+    "load_targets": 12000,
+    "iteration": 1
+  }
+}
 ```
 
-## Configuration
+### Response Structure
 
-Create a `.env` file with your NextBillion.ai API credentials:
-
-```
-NEXTBILLION_API_KEY=your_api_key_here
-NEXTBILLION_API_URL=https://api.nextbillion.io
-```
-
-## Output
-
-The tool will generate:
-- Modified input files for each iteration with detailed change documentation
-- Solution files for each optimization run with comprehensive analysis
-- Comparison reports showing progress with detailed reasoning
-- Final optimized solution meeting the new constraints with explainable insights
-
-### Example Output
-
-The tool provides a comprehensive iteration summary table showing the evolution of optimization strategies and their impact:
-
-```
-======================================================================================================
-Iter | Compliance | Routes | Load Gap  | Objective            | Vehicles     | Time Window  | Type    
-------------------------------------------------------------------------------------------------------
-1    | 0.0%       | 42     | 504000    | maximize_load_balance | 4@12000      | 45m/30m      | Regular 
-2    | 100.0%     | 6      | 0         | minimize_duration    | 15@16000     | 60m/30m      | Regular 
-3    | 57.1%      | 7      | 21094     | N/A                  | N/A          | 15m/15m      | Regular 
-4    | 100.0%     | 5      | 0         | N/A                  | 3@18000      | 90m/30m      | Regular 
-5    | 100.0%     | 5      | 0         | N/A                  | N/A          | 120m/30m     | Regular 
-6    | 57.1%      | 7      | 12895     | N/A                  | N/A          | 30m/30m      | Regular 
-7    | 83.3%      | 6      | 4480      | N/A                  | 3@16000      | 45m/30m      | Regular 
-8    | 83.3%      | 6      | 9014      | N/A                  | N/A          | 60m/30m      | Regular 
-9    | 57.1%      | 7      | 21127     | N/A                  | N/A          | 15m/15m      | Regular 
-10   | 100.0%     | 5      | 0         | N/A                  | 3@14000      | 90m/30m      | Regular 
-======================================================================================================
+```json
+{
+  "request_id": "nb_1234567890_1_abc123def",
+  "status": "success",
+  "result": {
+    "routes": [...],
+    "unassigned": [...],
+    "summary": {
+      "distance": 1000000,
+      "duration": 36000
+    }
+  }
+}
 ```
 
-**Table Columns Explained:**
-- **Iter**: Iteration number
-- **Compliance**: Percentage of routes meeting the minimum load requirement
-- **Routes**: Number of routes in the solution
-- **Load Gap**: Total load gap across all routes below target
-- **Objective**: Optimization objective (e.g., minimize_duration, maximize_load_balance)
-- **Vehicles**: Number and capacity of vehicles added (e.g., "4@12000" = 4 vehicles with 12,000 capacity)
-- **Time Window**: Time window softening constraints (overtime/lateness in minutes)
-- **Type**: Strategy type (Regular or Relaxed)
+### Configuration Options
 
-**Strategy Types Explained:**
+| Environment Variable | Default | Description |
+|---------------------|---------|-------------|
+| `NEXTBILLION_API_URL` | `https://api.nextbillion.io` | API base URL |
+| `NEXTBILLION_RATE_LIMIT_MS` | `1000` | Minimum ms between API calls |
+| `NEXTBILLION_MAX_RETRIES` | `3` | Maximum retry attempts |
+| `NEXTBILLION_RETRY_DELAY_MS` | `1000` | Initial retry delay (exponential backoff) |
+| `NEXTBILLION_API_KEY` | (none) | Default API key (optional) |
 
-**🟢 Regular Strategy (Green)**
-- **When Used**: During normal iterative optimization when the previous iteration produced a valid solution with routes
-- **Characteristics**: 
-  - Standard constraints with moderate time window softening (15-60 minutes)
-  - Conservative approach with incremental changes
-  - Reasonable vehicle additions (3-15 vehicles)
-  - Standard optimization objectives (minimize_duration, maximize_load_balance)
+### Fallback Mock Mode
 
-**🟡 Relaxed Strategy (Yellow)**
-- **When Used**: When a regular iteration fails to produce any routes (empty routes array), indicating optimization failure
-- **Characteristics**:
-  - Aggressive constraints to ensure a solution is found
-  - Recovery mechanism for failed optimizations
-  - More aggressive time window softening (120+ minutes)
-  - More vehicles with lower capacity (up to 15 vehicles with 10,000 capacity)
-  - Simpler objectives (minimize_vehicles_with_load_constraint)
-  - Additional time window relaxation (60 minutes extra)
+When the NextBillion.ai API is unavailable or an invalid API key is provided, the application automatically falls back to mock mode:
 
-**🔄 Recovery Process:**
-1. Normal flow uses regular strategies each iteration
-2. If an iteration produces no routes, it's marked as failed
-3. Tool reverts to the last successful iteration and applies relaxed strategies
-4. Uses more aggressive parameters to ensure a solution is found
-5. If relaxed strategy works, continues with regular strategies
-6. If relaxed strategy also fails, the process stops
+- **Automatic Detection**: Real API calls are attempted first
+- **Graceful Degradation**: Falls back to mock responses if API fails
+- **Realistic Data**: Mock responses match the actual API structure
+- **Request IDs**: Mock mode generates realistic request IDs for testing
+- **Logging**: Clear indication when mock mode is being used
 
-**Key Insights from Example:**
-- **Iteration 1**: Started with load balancing objective but resulted in too many routes (42)
-- **Iteration 2**: Switched to duration minimization with 15 additional vehicles, achieved 100% compliance
-- **Iteration 4**: Reduced to 5 routes while maintaining 100% compliance
-- **Final Result**: 100% compliance with 5 routes, meeting all constraints
+This ensures the application remains functional for testing and development purposes even without a valid API key.
 
-The tool also provides a detailed strategy change summary showing how parameters evolved across iterations to achieve the target constraints. 
+## Project Structure
+
+```
+mvrp_explainability/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   │   └── optimize/      # Optimization endpoint
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Main page
+├── components/            # React components
+│   ├── ApiKeyInput.tsx    # API key management
+│   ├── ExecutionPanel.tsx # Optimization execution
+│   ├── FileUpload.tsx     # File upload handling
+│   ├── InputModifiers.tsx # Parameter adjustment
+│   └── ResultsTable.tsx   # Results display
+├── lib/                   # Utility libraries
+│   └── roir-integration.ts # API integration logic
+├── types/                 # TypeScript type definitions
+│   └── index.ts           # Shared types
+├── env.example            # Environment configuration example
+├── next.config.js         # Next.js configuration
+├── package.json           # Dependencies and scripts
+├── tailwind.config.js     # Tailwind CSS configuration
+└── tsconfig.json          # TypeScript configuration
+```
+
+## Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+
+### Key Technologies
+
+- **Next.js 13.5.6** - React framework with App Router
+- **React 18.2.0** - UI library
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **Lucide React** - Icons
+- **React Dropzone** - File upload handling
+
+## Deployment
+
+### Vercel (Recommended)
+
+1. Connect your repository to Vercel
+2. Set environment variables in Vercel dashboard
+3. Deploy automatically on push to main branch
+
+### Other Platforms
+
+1. Build the application: `npm run build`
+2. Start the production server: `npm run start`
+3. Set environment variables for your platform
+
+## Troubleshooting
+
+### Common Issues
+
+1. **API Key Errors**: Ensure your NextBillion.ai API key is valid and has sufficient credits
+2. **Rate Limiting**: The application includes built-in rate limiting; increase `NEXTBILLION_RATE_LIMIT_MS` if needed
+3. **File Format Errors**: Ensure your JSON files match the expected format
+4. **Network Issues**: Check your internet connection and API endpoint accessibility
+
+### Debug Mode
+
+Enable debug logging by setting environment variables:
+```env
+DEBUG=true
+NEXTBILLION_DEBUG=true
+```
+
+### Logs
+
+The application logs all API calls and optimization progress to the console:
+- API request URLs and timestamps
+- Iteration progress and request IDs
+- Error messages and retry attempts
+- Optimization completion summaries
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details. 

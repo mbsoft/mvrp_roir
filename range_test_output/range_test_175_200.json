@@ -1,0 +1,500 @@
+{
+  "summary": {
+    "totalAttempts": 1,
+    "startIndex": 175,
+    "endIndex": 200,
+    "successfulRequest": false,
+    "removedJobCount": 25
+  },
+  "removedJobs": [
+    {
+      "job": {
+        "id": "72000179840-5-3",
+        "description": "7-ELEVEN 22939 | 1624 S DECATUR | LAS VEGAS | DELIVER 7A-2P!!!!!!!!!!!!! | 0 | 92 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          92
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 145
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000119539-6-62",
+        "description": "EL DORADO CANTINA | 3025 SAMMY DAVIS DRIVE | LAS VEGAS | SIDE DOOR DELIVERY ON INDUSTRIAL | 3 | 15 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          15
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 146
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000172091-7-26",
+        "description": "TREASURES | 2801 WESTWOOD DR | LAS VEGAS | LINE UP LIQUOR OUTSIDE COOLER | 0 | 71 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          71
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 147
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000106210-8-35",
+        "description": "BONANZA GIFT SHOP | 2400 S LAS VEGAS BLVD | LAS VEGAS | USE BACK DOOR ON CINCINATTI. LAST DOOR AT THE END OF THE ALLEY | 7 | 87 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          87
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 148
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000154733-1-24",
+        "description": "SAMS CLUB #6261 | 1910 E SERENE AVE | LAS VEGAS | DOCK | 0 | 96 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          96
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 149
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000132567-2-38",
+        "description": "LEE'S LIQUOR 106 LV BLVD | 9110 LAS VEGAS BLVD | LAS VEGAS | nan | 8 | 579 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          579
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 150
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000004129-3-27",
+        "description": "$VEGAS LIQUOR | 8480 LAS VEGAS BLVD S #150-160 | LAS VEGAS | nan | 26 | 72 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          72
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 151
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000129116-4-45",
+        "description": "KHOURY'S FINE WINE SPIR(ONPRE) | 9915 S EASTERN - STE 110 | HENDERSON | FRONT DOOR DELIVERY | 8 | 203 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          203
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 152
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000129118-5-14",
+        "description": "KHOURYS FINE WINE&SPIRITS(OFF | 9915 S EASTERN #110 | HENDERSON | FRONT DOOR DELIVERY | 5 | 57 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          57
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 152
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000002844-1-24",
+        "description": "EXCALIBUR THE MARKET 402 | 3850 LAS VEGAS BLVD S | LAS VEGAS | nan | 0 | 20 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          20
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000002847-2-6",
+        "description": "EXCALIBUR ROYAL ESSTLS 0414 | 3850 LAS VEGAS BLVD S | LAS VEGAS | 702-245-5144 EVA-CALL HER 30 M IN DELIVERY. | 0 | 22 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          22
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000002846-3-39",
+        "description": "EXCALIBUR RESORT ESSTLS 0419 | 3850 LAS VEGAS BLVD S | LAS VEGAS | nan | 0 | 22 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          22
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000003105-4-61",
+        "description": "EXCALIBUR ROTUNDA CART 0406 | 3850 LAS VEGAS BLVD S | LAS VEGAS | nan | 0 | 13 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          13
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000120521-5-59",
+        "description": "EXCALIBUR 24/7 0411 | 3850 LAS VEGAS BLVD SO | LAS VEGAS | EARLY AM DELIVERY PLEASE! DRIV ER IS TO TAKE ALL PALLETS TO S | 0 | 27 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          27
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000002845-6-26",
+        "description": "EXCALIBUR POOL 409 | 3850 LAS VEGAS BLVD SOUTH | LAS VEGAS | nan | 0 | 12 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          12
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000005483-7-40",
+        "description": "BUCA DI BEPPO EXCALIBUR | 3850 LAS VEGAS BLVD S | LAS VEGAS | nan | 3 | 4 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          4
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 153
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000175006-8-33",
+        "description": "2000 X O LIQUOR | 3319 S MARYLAND PKWY | LAS VEGAS | FRONT DOOR | 3 | 94 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          94
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 154
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000002989-9-95",
+        "description": "702 MART | 1468 E CHARLESTON BLVD | LAS VEGAS | DROP IN COOLER AFTER CHECK IN | 0 | 86 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          86
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 155
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000000282-10-84",
+        "description": "VEGAS MARKET & LIQUOR | 861 N NELLIS BLVD #1 | LAS VEGAS | DROP IN COOLER AFTER CHECK IN EXCEPT BULK PUT AWAY. | 1 | 56 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          56
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 156
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000004809-11-45",
+        "description": "MAVERIK #674 | 1970 LOSEE ROAD | NORTH LAS VEGAS | nan | 0 | 125 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          125
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 157
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000137584-1-97",
+        "description": "HOST INTERNATIONAL@MCCARRAN | 5757 WAYNE NEWTON BLVD | LAS VEGAS | CALL SHANE FOR GATE PICK UP ES CORT 7022909956 | 0 | 79 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          79
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 128
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000164663-2-62",
+        "description": "THE CENTURION @ LAS #27085 | 5757 WAYNE NEWTON BLVD TERM 1 | LAS VEGAS | MAIN GATE @ MCCARRAN/ CALL 702-490-8431 | 40 | 65 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          65
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 158
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000002015-3-42",
+        "description": "GTMS-THE CLUB@LAS D GATE | 5757 WAYNE NEWTON BLVD | LAS VEGAS | CALL KATIE 7025691284 DOCK50 | 18 | 12 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          12
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 128
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000004575-1-5",
+        "description": "DURANGO STATION | 6915 S DURANGO | LAS VEGAS | DOCK ON WEST SIDE. ENTER ON MAULE, 3RD RIGHT WEST OF DURANGO. PICK UP EMPTY KEGS. | 0 | 1,494 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          1,
+          494
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 159
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    },
+    {
+      "job": {
+        "id": "72000132562-1-22",
+        "description": "LEE'S LIQUOR #9 MESQUITE | 670 W PIONEER BLVD | MESQUITE | DOCK REAR OF BUILDING | 0 | 1,631 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          1,
+          631
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 137
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:35:49.881Z",
+      "range": "175-200"
+    }
+  ],
+  "successfulJobs": [],
+  "successfulRequest": null,
+  "recommendations": [
+    {
+      "type": "error",
+      "description": "Range 175-200 causes errors"
+    },
+    {
+      "type": "info",
+      "description": "Identified 25 jobs in this range that cause capacity errors"
+    }
+  ]
+}

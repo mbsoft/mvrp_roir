@@ -1,0 +1,43 @@
+{
+  "summary": {
+    "totalAttempts": 1,
+    "startIndex": 199,
+    "endIndex": 200,
+    "successfulRequest": false,
+    "removedJobCount": 1
+  },
+  "removedJobs": [
+    {
+      "job": {
+        "id": "72000132562-1-22",
+        "description": "LEE'S LIQUOR #9 MESQUITE | 670 W PIONEER BLVD | MESQUITE | DOCK REAR OF BUILDING | 0 | 1,631 | 2025-07-23T07:00:00-07:00 | 2025-07-23T15:00:00-07:00",
+        "delivery": [
+          1,
+          631
+        ],
+        "time_windows": [
+          [
+            1753441200,
+            1753470000
+          ]
+        ],
+        "location_index": 137
+      },
+      "error": "Failed to submit optimization: Request failed with status code 400",
+      "timestamp": "2025-07-23T19:37:23.463Z",
+      "range": "199-200"
+    }
+  ],
+  "successfulJobs": [],
+  "successfulRequest": null,
+  "recommendations": [
+    {
+      "type": "error",
+      "description": "Range 199-200 causes errors"
+    },
+    {
+      "type": "info",
+      "description": "Identified 1 jobs in this range that cause capacity errors"
+    }
+  ]
+}
