@@ -1,5 +1,6 @@
 'use client'
 
+import { Settings } from 'lucide-react'
 import { OptimizationParams } from '@/types'
 
 interface InputModifiersProps {
@@ -17,7 +18,10 @@ export default function InputModifiers({ params, onParamsChange }: InputModifier
 
   return (
     <div className="card">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Input Modifiers</h3>
+      <div className="flex items-center space-x-2 mb-4">
+        <Settings className="h-5 w-5 text-gray-600" />
+        <h3 className="text-lg font-semibold text-gray-900">Input Modifiers</h3>
+      </div>
       
       <div className="space-y-6">
         <div>
@@ -52,7 +56,7 @@ export default function InputModifiers({ params, onParamsChange }: InputModifier
             <input
               type="range"
               min="0"
-              max="60"
+              max="180"
               step="5"
               value={params.shiftTimeAdjustments}
               onChange={(e) => handleChange('shiftTimeAdjustments', parseInt(e.target.value))}

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { OptimizationResult } from '@/types'
-import { Copy, Download } from 'lucide-react'
+import { Download } from 'lucide-react'
 
 interface ResultsTableProps {
   results: OptimizationResult[]
@@ -10,20 +10,17 @@ interface ResultsTableProps {
 }
 
 export default function ResultsTable({ results, finalRequestId }: ResultsTableProps) {
-  const handleCopyRequestId = () => {
-    navigator.clipboard.writeText(finalRequestId)
-  }
-
   const handleExportResults = () => {
     const csvContent = [
-      ['Iteration', 'Compliance (%)', 'Routes', 'Load Gap', 'Objective', 'Time Window', 'Request ID', 'Timestamp'],
+      ['Iteration', 'Compliance (%)', 'Routes', 'Load Gap', 'Objective', 'Time Window Easing (m)', 'Shift Time Adjustments (m)', 'Request ID', 'Timestamp'],
       ...results.map(result => [
         result.iteration.toString(),
         result.compliance.toString(),
         result.routes.toString(),
         result.loadGap.toString(),
         result.objective,
-        result.timeWindow,
+        result.timeWindowEasing.toString(),
+        result.shiftTimeAdjustments.toString(),
         result.requestId,
         result.timestamp
       ])
@@ -47,13 +44,6 @@ export default function ResultsTable({ results, finalRequestId }: ResultsTablePr
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Optimization Results</h3>
         <div className="flex space-x-2">
-          <button
-            onClick={handleCopyRequestId}
-            className="flex items-center space-x-1 px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors"
-          >
-            <Copy className="h-4 w-4" />
-            <span>Copy Final Request ID</span>
-          </button>
           <button
             onClick={handleExportResults}
             className="flex items-center space-x-1 px-3 py-1 text-sm bg-green-100 text-green-700 rounded hover:bg-green-200 transition-colors"
@@ -84,7 +74,10 @@ export default function ResultsTable({ results, finalRequestId }: ResultsTablePr
                 Objective
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Time Window
+                Time Window Easing (m)
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Shift Time Adjustments (m)
               </th>
             </tr>
           </thead>
@@ -115,7 +108,10 @@ export default function ResultsTable({ results, finalRequestId }: ResultsTablePr
                   {result.objective}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {result.timeWindow}
+                  {result.timeWindowEasing}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {result.shiftTimeAdjustments}
                 </td>
               </tr>
             ))}

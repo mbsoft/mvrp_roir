@@ -56,7 +56,8 @@ export interface OptimizationResult {
   routes: number
   loadGap: number
   objective: string
-  timeWindow: string
+  timeWindowEasing: number
+  shiftTimeAdjustments: number
   type: 'Success' | 'Error'
   requestId: string
   timestamp: string

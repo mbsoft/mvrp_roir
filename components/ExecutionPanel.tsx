@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Play, Loader2 } from 'lucide-react'
+import { Play, Loader2, Rocket } from 'lucide-react'
 
 interface ExecutionPanelProps {
   isExecuting: boolean
@@ -24,7 +24,10 @@ export default function ExecutionPanel({
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Execution</h3>
+      <div className="flex items-center space-x-2 mb-4">
+        <Rocket className="h-5 w-5 text-gray-600" />
+        <h3 className="text-lg font-semibold text-gray-900">Execution</h3>
+      </div>
       
       <button
         onClick={onExecute}
