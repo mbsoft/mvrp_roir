@@ -25,7 +25,7 @@ A modern Next.js web application for iteratively refining route optimization usi
 1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd mvrp_explainability
+cd mvrp_roir
 ```
 
 2. Install dependencies:
@@ -44,7 +44,6 @@ NEXTBILLION_API_URL=https://api.nextbillion.io
 NEXTBILLION_RATE_LIMIT_MS=1000
 NEXTBILLION_MAX_RETRIES=3
 NEXTBILLION_RETRY_DELAY_MS=1000
-# NEXTBILLION_API_KEY=your_default_api_key_here
 ```
 
 4. Start the development server:
@@ -152,7 +151,7 @@ This ensures the application remains functional for testing and development purp
 ## Project Structure
 
 ```
-mvrp_explainability/
+mvrp_roir/
 ├── app/                    # Next.js app directory
 │   ├── api/               # API routes
 │   │   └── optimize/      # Optimization endpoint
