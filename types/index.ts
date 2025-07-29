@@ -54,6 +54,7 @@ export interface OptimizationResult {
   iteration: number
   compliance: number
   routes: number
+  unassigned: number
   loadGap: number
   objective: string
   timeWindowEasing: number

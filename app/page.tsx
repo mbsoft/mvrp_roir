@@ -23,6 +23,22 @@ export default function Home() {
   const [currentIteration, setCurrentIteration] = useState(0)
   const [finalRequestId, setFinalRequestId] = useState('')
   const [apiKey, setApiKey] = useState('')
+  const [loadTargetRange, setLoadTargetRange] = useState<{ min: number; max: number } | undefined>()
+
+  const handleLoadTargetSuggestion = (min: number, max: number, suggested: number) => {
+    console.log('Load target suggestion called:', { min, max, suggested, currentValue: optimizationParams.loadTargets })
+    
+    setOptimizationParams(prev => ({
+      ...prev,
+      loadTargets: suggested
+    }))
+    
+    // Store the range for the slider
+    setLoadTargetRange({ min, max })
+    
+    // Show a notification or update status to inform user
+    setExecutionStatus(`Auto-adjusted load target to ${suggested} based on solution analysis`)
+  }
 
   const handleExecute = async () => {
     if (!inputFile || !solutionFile || !apiKey) return
@@ -140,6 +156,7 @@ export default function Home() {
                 onFileUpload={setSolutionFile}
                 acceptedFileType=".json"
                 loadTarget={optimizationParams.loadTargets}
+                onLoadTargetSuggestion={handleLoadTargetSuggestion}
               />
               <ExecutionPanel
                 isExecuting={isExecuting}
@@ -156,6 +173,7 @@ export default function Home() {
               <InputModifiers
                 params={optimizationParams}
                 onParamsChange={setOptimizationParams}
+                loadTargetRange={loadTargetRange}
               />
             </div>
           </div>

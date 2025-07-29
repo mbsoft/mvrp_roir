@@ -210,6 +210,73 @@ export class ROIRIntegration {
         }
       }
 
+      // Apply shift time adjustments to vehicle time windows
+      if (refinedParams.shiftTimeAdjustments > 0 && requestPayload.vehicles) {
+        const shiftSeconds = refinedParams.shiftTimeAdjustments * 60
+        
+        requestPayload.vehicles = requestPayload.vehicles.map((vehicle: any) => {
+          if (vehicle.time_window && Array.isArray(vehicle.time_window) && vehicle.time_window.length === 2) {
+            const [startTime, endTime] = vehicle.time_window
+            const windowDuration = endTime - startTime
+            
+            // Extend the time window by shifting start time earlier and end time later
+            const adjustedStartTime = startTime - shiftSeconds
+            const adjustedEndTime = endTime + shiftSeconds
+            
+            console.log(`[${new Date().toISOString()}] Vehicle ${vehicle.id} time window adjusted:`, {
+              original: `[${startTime}, ${endTime}] (${windowDuration}s)`,
+              adjusted: `[${adjustedStartTime}, ${adjustedEndTime}] (${adjustedEndTime - adjustedStartTime}s)`,
+              shiftSeconds
+            })
+            
+            return {
+              ...vehicle,
+              time_window: [adjustedStartTime, adjustedEndTime]
+            }
+          }
+          return vehicle
+        })
+        
+        console.log(`[${new Date().toISOString()}] Applied shift time adjustments to ${requestPayload.vehicles.length} vehicles`)
+      }
+
+      // Apply time window easing to job time windows
+      if (refinedParams.timeWindowEasing > 0 && requestPayload.jobs) {
+        const easingSeconds = refinedParams.timeWindowEasing * 60
+        
+        requestPayload.jobs = requestPayload.jobs.map((job: any) => {
+          if (job.time_windows && Array.isArray(job.time_windows)) {
+            const adjustedTimeWindows = job.time_windows.map((timeWindow: number[]) => {
+              if (Array.isArray(timeWindow) && timeWindow.length === 2) {
+                const [startTime, endTime] = timeWindow
+                const windowDuration = endTime - startTime
+                
+                // Extend the time window by easing start time earlier and end time later
+                const easedStartTime = startTime - easingSeconds
+                const easedEndTime = endTime + easingSeconds
+                
+                console.log(`[${new Date().toISOString()}] Job ${job.id} time window eased:`, {
+                  original: `[${startTime}, ${endTime}] (${windowDuration}s)`,
+                  eased: `[${easedStartTime}, ${easedEndTime}] (${easedEndTime - easedStartTime}s)`,
+                  easingSeconds
+                })
+                
+                return [easedStartTime, easedEndTime]
+              }
+              return timeWindow
+            })
+            
+            return {
+              ...job,
+              time_windows: adjustedTimeWindows
+            }
+          }
+          return job
+        })
+        
+        console.log(`[${new Date().toISOString()}] Applied time window easing to ${requestPayload.jobs.length} jobs`)
+      }
+
       // Add time window softening constraints for iterative refinement
       if (refinedParams.timeWindowEasing > 0) {
         if (!requestPayload.options.constraint) {
@@ -323,6 +390,7 @@ export class ROIRIntegration {
         iteration,
         compliance: Math.round(compliance),
         routes: totalRoutes,
+        unassigned: unassigned,
         loadGap: Math.round(loadGap),
         objective: this.getObjectiveString(refinedParams.objective),
         timeWindowEasing: refinedParams.timeWindowEasing,
