@@ -7,9 +7,11 @@
 
 ## Executive Summary
 
-The Route Optimization Iterative Refiner (ROIR) represents a breakthrough approach to solving complex Vehicle Routing Problems (VRP) through intelligent iterative refinement. This white paper explores the development, implementation, and benefits of a web-based tool that leverages advanced optimization algorithms to iteratively improve route solutions while providing real-time feedback and compliance analysis.
+The Route Optimization Iterative Refiner (ROIR) represents a breakthrough approach to solving complex Vehicle Routing Problems (VRP) through intelligent iterative refinement. **Powered by NextBillion.ai's industry-leading routing optimization engine**, ROIR combines cutting-edge optimization algorithms with intelligent iterative refinement to deliver superior route planning solutions.
 
-Traditional route optimization often produces suboptimal results due to rigid parameter settings and lack of iterative improvement. ROIR addresses these limitations by implementing a multi-iteration approach that progressively refines optimization parameters, analyzes compliance rates, and provides comprehensive solution analysis.
+This white paper explores the development, implementation, and benefits of a web-based tool that leverages NextBillion.ai's advanced routing technology to iteratively improve route solutions while providing real-time feedback and comprehensive compliance analysis.
+
+Traditional route optimization often produces suboptimal results due to rigid parameter settings and lack of iterative improvement. ROIR addresses these limitations by implementing a multi-iteration approach that progressively refines optimization parameters, analyzes compliance rates, and provides comprehensive solution analysis, all built upon NextBillion.ai's proven optimization foundation.
 
 ---
 
@@ -39,7 +41,9 @@ Traditional VRP solutions often suffer from several limitations:
 - **Poor Compliance Analysis**: Lack of detailed analysis regarding how well solutions meet business requirements
 - **Inadequate User Feedback**: Limited real-time visibility into the optimization process
 
-The Route Optimization Iterative Refiner (ROIR) was developed to address these challenges by providing an intelligent, iterative approach to route optimization that continuously improves solutions while providing comprehensive analysis and user feedback.
+The Route Optimization Iterative Refiner (ROIR) was developed to address these challenges by providing an intelligent, iterative approach to route optimization that continuously improves solutions while providing comprehensive analysis and user feedback. **ROIR is powered by NextBillion.ai's industry-leading routing optimization engine**, combining cutting-edge optimization algorithms with intelligent iterative refinement to deliver superior route planning solutions.
+
+**NextBillion.ai's advanced routing technology** provides the foundation for ROIR's optimization capabilities, enabling the system to handle complex real-world constraints including time windows, vehicle capacities, service times, and multi-depot scenarios. This partnership ensures that ROIR leverages the most sophisticated routing algorithms available in the market, while adding intelligent iterative refinement layers that continuously improve solution quality.
 
 ---
 
@@ -47,7 +51,7 @@ The Route Optimization Iterative Refiner (ROIR) was developed to address these c
 
 ### Current Challenges in Route Optimization
 
-1. **Suboptimal Solutions**: Traditional optimization often produces solutions that don't fully utilize available resources or meet business constraints effectively.
+1. **Suboptimal Solutions**: Traditional optimization often produces solutions that don't fully utilize available resources or meet specific business constraints effectively.
 
 2. **Limited Parameter Exploration**: Most optimization tools use fixed parameters, missing opportunities for improvement through parameter variation.
 
@@ -99,12 +103,23 @@ ROIR implements a novel iterative refinement approach that systematically improv
 
 **Backend:**
 - **Next.js API Routes**: Server-side API endpoints
-- **NextBillion.ai API**: External route optimization service
+- **NextBillion.ai API**: **Industry-leading routing optimization engine** - the core optimization technology
 - **Server-Sent Events (SSE)**: Real-time data streaming
 
 **Data Processing:**
 - **JSON Schema Validation**: Input/output validation
 - **Custom Analytics Engine**: Solution analysis and compliance calculation
+
+### Core Optimization Engine
+
+**NextBillion.ai's Advanced Routing Technology** serves as the foundation of ROIR's optimization capabilities:
+
+- **State-of-the-Art Algorithms**: Leverages the most sophisticated routing algorithms available in the market
+- **Real-World Constraint Handling**: Supports complex scenarios including time windows, vehicle capacities, service times, and multi-depot operations
+- **Scalable Performance**: Handles large-scale optimization problems with thousands of locations and vehicles
+- **Industry Proven**: Trusted by leading logistics companies worldwide for mission-critical route optimization
+
+ROIR enhances NextBillion.ai's core optimization engine with intelligent iterative refinement, comprehensive analysis, and real-time user feedback, creating a powerful combination of proven optimization technology and innovative refinement strategies.
 
 ### System Architecture
 
@@ -112,6 +127,7 @@ ROIR implements a novel iterative refinement approach that systematically improv
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Frontend UI   │    │  Next.js API    │    │ NextBillion.ai  │
 │   (Next.js)     │◄──►│    Routes       │◄──►│   API Service   │
+│                 │    │                 │    │  (Core Engine)  │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          │                       │                       │
@@ -426,7 +442,7 @@ The success of ROIR demonstrates the value of combining intelligent algorithms w
 
 ## About the Author
 
-**James Welch** is a software engineer and optimization specialist with expertise in vehicle routing problems, web development, and algorithmic optimization. This project represents a practical application of advanced optimization techniques to real-world logistics challenges.
+**Jim Welch** is the Head of Solutions Engineering at NextBillion.ai with expertise in vehicle routing problems, web development, and algorithmic optimization. This project represents a practical application of advanced optimization techniques to real-world logistics challenges.
 
 ---
 
