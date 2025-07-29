@@ -14,7 +14,7 @@ export default function Home() {
   const [optimizationParams, setOptimizationParams] = useState<OptimizationParams>({
     timeWindowEasing: 30,
     shiftTimeAdjustments: 15,
-    numberOfIterations: 3,
+    numberOfIterations: 10,
     loadTargets: 12000,
   })
   const [results, setResults] = useState<OptimizationResult[]>([])
